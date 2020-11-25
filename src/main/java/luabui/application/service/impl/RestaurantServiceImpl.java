@@ -80,6 +80,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<RestaurantDTO> findRestaurantByArea(String area) {
+        log.debug("Find Restaurants By Area.");
         List<Restaurant> restaurants = restaurantRepository.getRestaurantsByAddress(area);
         return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
     }
