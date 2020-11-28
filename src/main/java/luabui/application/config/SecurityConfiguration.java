@@ -1,14 +1,20 @@
 package luabui.application.config;
 
+import luabui.application.config.jwt.JwtFilter;
+import luabui.application.config.jwt.JwtEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.sql.DataSource;
@@ -18,7 +24,10 @@ import javax.sql.DataSource;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    JwtFilter jwtFilter;
+
+    @Autowired
+    private JwtEntryPoint jwtEntryPoint;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -37,13 +46,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .usersByUsernameQuery(usersQuery)
                 .authoritiesByUsernameQuery(rolesQuery)
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder);
+                .dataSource(dataSource);
+//                .passwordEncoder(bCryptPasswordEncoder);
 
         auth.inMemoryAuthentication()
                 .withUser("admin")
                 .password(bCryptPasswordEncoder.encode("admin"))
                 .authorities("ADMIN");
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
@@ -64,15 +79,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN'})")
                 .antMatchers(HttpMethod.PUT, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN', 'DELIVERY'})")
                 .antMatchers(HttpMethod.DELETE, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN', 'DELIVERY'})")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .csrf().disable()
                 .httpBasic()
-                .authenticationEntryPoint(restAuthenticationEntryPoint);
+                .authenticationEntryPoint(jwtEntryPoint)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);;
 
 
-        http.addFilterAfter(new CustomFilter(),
-                BasicAuthenticationFilter.class);
-//        http.csrf().disable();
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

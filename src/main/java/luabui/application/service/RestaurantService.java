@@ -2,10 +2,7 @@ package luabui.application.service;
 
 
 
-import luabui.application.dto.FoodItemDTO;
-import luabui.application.dto.OrderDTO;
-import luabui.application.dto.OrderModificationDTO;
-import luabui.application.dto.RestaurantDTO;
+import luabui.application.dto.*;
 
 import java.util.List;
 
@@ -22,5 +19,7 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId);
 
-    List<RestaurantDTO> findRestaurantByArea(String area);
+    List<RestaurantDTO> findRestaurantByAddressLike(String address);
+
+    RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
 }

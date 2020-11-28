@@ -68,7 +68,7 @@ public class CustomerController {
      * @param orderId
      * @return
      */
-    @GetMapping(value = "/customer/{customerId}/orders/{orderId}")
+    @GetMapping(value = "/customers/{customerId}/orders/{orderId}")
     public ResponseEntity<OrderDTO> getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerOrderById(customerId, orderId));
     }

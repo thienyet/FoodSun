@@ -73,10 +73,14 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
-        deliveryGuy.setPassword(bCryptPasswordEncoder.encode(deliveryGuyDTO.getPassword()));
+        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
 
-        userRepository.saveAndFlush(user);
         deliveryGuyRepository.saveAndFlush(deliveryGuy);
+
+        user.setEmail(deliveryGuy.getEmail());
+        user.setPassword(deliveryGuy.getPassword());
+        userRepository.saveAndFlush(user);
+
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
     }
 
@@ -138,7 +142,8 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     private void createUser(DeliveryGuy deliveryGuy) {
         User user = new User();
         user.setEmail(deliveryGuy.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(deliveryGuy.getPassword()));
+//        user.setPassword(bCryptPasswordEncoder.encode(deliveryGuy.getPassword()));
+        user.setPassword(deliveryGuy.getPassword());
         user.setRole(roleRepository.findByRole("DELIVERY"));
         userRepository.save(user);
     }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class RestaurantController {
     @GetMapping(value = "/restaurants/area/{area}")
     public ResponseEntity<?> getAllRestaurantsInArea(@PathVariable String area) {
         log.debug("Getting all Restaurants in an area");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findRestaurantByArea(area));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findRestaurantByAddressLike(area));
     }
 
     /**
@@ -125,17 +126,18 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }
 
-    /**
-     * Delete food items when provided with food item ids.
-     *
-     * @param restaurantId
-     * @param foodItemIds
-     * @return
-     */
+
     @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
     public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<Long> foodItemIds) {
         log.debug("Removing food items from restaurants");
-        restaurantService.removeFoodItems(restaurantId, foodItemIds);
+        /**
+         * Delete food items when provided with food item ids.
+         *
+         * @param restaurantId
+         * @param foodItemIds
+         * @return
+         */ restaurantService.removeFoodItems(restaurantId, foodItemIds);
         return ResponseEntity.noContent().build();
     }
+
 }

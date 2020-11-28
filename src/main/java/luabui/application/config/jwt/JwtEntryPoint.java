@@ -1,4 +1,4 @@
-package luabui.application.config;
+package luabui.application.config.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public final class RestAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public final class JwtEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(

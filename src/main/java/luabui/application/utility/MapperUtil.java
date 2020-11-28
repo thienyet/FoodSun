@@ -26,7 +26,8 @@ public class MapperUtil {
         customer.setPhoneNo(customerDTO.getPhoneNo());
         customer.setEmail(customerDTO.getEmail());
         customer.setAddress(customerDTO.getAddress());
-        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
+//        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
+        customer.setPassword(customerDTO.getPassword());
         return customer;
     }
 
@@ -110,7 +111,7 @@ public class MapperUtil {
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setAddress(deliveryGuyDTO.getAddress());
-        deliveryGuy.setPassword(bCryptPasswordEncoder.encode(deliveryGuyDTO.getPassword()));
+        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
         return deliveryGuy;
     }
 
@@ -132,7 +133,7 @@ public class MapperUtil {
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setAddress(restaurantDTO.getAddress());
-        restaurant.setPassword(bCryptPasswordEncoder.encode(restaurantDTO.getPassword()));
+        restaurant.setPassword(restaurantDTO.getPassword());
         return restaurant;
     }
 

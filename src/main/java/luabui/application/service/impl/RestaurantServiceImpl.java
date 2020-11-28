@@ -8,12 +8,8 @@ import luabui.application.dto.RestaurantDTO;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
 import luabui.application.exception.RestaurantNotFoundException;
-import luabui.application.model.FoodItem;
-import luabui.application.model.Order;
-import luabui.application.model.Restaurant;
-import luabui.application.repository.FoodItemRepository;
-import luabui.application.repository.OrderRepository;
-import luabui.application.repository.RestaurantRepository;
+import luabui.application.model.*;
+import luabui.application.repository.*;
 import luabui.application.service.RestaurantService;
 import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +25,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurantRepository;
     private FoodItemRepository foodItemRepository;
     private OrderRepository orderRepository;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository, OrderRepository orderRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository, OrderRepository orderRepository, RoleRepository roleRepository, UserRepository userRepository) {
         this.restaurantRepository = restaurantRepository;
         this.foodItemRepository = foodItemRepository;
         this.orderRepository = orderRepository;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -79,10 +79,34 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantDTO> findRestaurantByArea(String area) {
-        log.debug("Find Restaurants By Area.");
-        List<Restaurant> restaurants = restaurantRepository.getRestaurantsByAddress(area);
+    public List<RestaurantDTO> findRestaurantByAddressLike(String address) {
+        log.debug("Find Restaurants By Address.");
+        List<Restaurant> restaurants = restaurantRepository.getRestaurantsByAddressLike(address);
         return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId) {
+        log.debug("Updating Restaurant.");
+        Restaurant restaurant = getRestaurant(restaurantId);
+        User user = userRepository.findByEmail(restaurant.getEmail());
+        restaurant.setEmail(restaurantDTO.getEmail());
+        restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setAddress(restaurantDTO.getAddress());
+        restaurant.setAvatar(restaurantDTO.getAvatar());
+        restaurant.setCategoryItem(restaurantDTO.getCategoryItem());
+        restaurant.setMaxCost(restaurantDTO.getMaxCost());
+        restaurant.setMinCost(restaurantDTO.getMinCost());
+
+        restaurantRepository.save(restaurant);
+
+        user.setEmail(restaurant.getEmail());
+        user.setPassword(restaurant.getPassword());
+        userRepository.saveAndFlush(user);
+
+        return MapperUtil.toRestaurantDTO(restaurant);
     }
 
     @Override
@@ -102,6 +126,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantDTO save(RestaurantDTO restaurantDTO) {
         log.debug("Saving Restaurant from Service.");
         Restaurant restaurant = restaurantRepository.save(MapperUtil.toRestaurant(restaurantDTO));
+        createUser(restaurant);
         return MapperUtil.toRestaurantDTO(restaurant);
     }
 
@@ -144,4 +169,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
+    private void createUser(Restaurant restaurant) {
+        User user = new User();
+        user.setEmail(restaurant.getEmail());
+        user.setPassword(restaurant.getPassword());
+        user.setRole(roleRepository.findByRole("RESTAURANT"));
+        userRepository.save(user);
+    }
 }

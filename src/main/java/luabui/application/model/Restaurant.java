@@ -20,9 +20,6 @@ public class Restaurant extends GeneralDetails {
     @Column(length = 255)
     private String categoryItem;
 
-    @Column(length = 255)
-    private String microsite_cuisines;
-
     @Column
     private Double maxCost;
 

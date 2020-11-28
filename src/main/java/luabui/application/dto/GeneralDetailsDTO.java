@@ -29,4 +29,9 @@ public abstract class GeneralDetailsDTO extends BaseEntityDTO {
     @NotNull(message = "Address field cannot be null.")
     @Email(message = "Enter a valid address.")
     private String address;
+
+    private String avatar;
+    private String categoryItem;
+    private Double maxCost;
+    private Double minCost;
 }

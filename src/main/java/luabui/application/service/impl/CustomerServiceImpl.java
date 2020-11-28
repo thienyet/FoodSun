@@ -77,14 +77,17 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = getCustomer(customerId);
         User user = userRepository.findByEmail(customer.getEmail());
 
-        user.setEmail(customerDTO.getEmail());
-        customer.setName(customerDTO.getName());
         customer.setEmail(customerDTO.getEmail());
+        customer.setName(customerDTO.getName());
         customer.setPhoneNo(customerDTO.getPhoneNo());
-        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
-
-        userRepository.save(user);
+//        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
+        customer.setPassword(customerDTO.getPassword());
         customerRepository.save(customer);
+
+        user.setEmail(customer.getEmail());
+        user.setPassword(customer.getPassword());
+        userRepository.save(user);
+
         return MapperUtil.toCustomerDTO(customer);
     }
 
@@ -142,7 +145,8 @@ public class CustomerServiceImpl implements CustomerService {
     private void createUser(Customer customer) {
         User user = new User();
         user.setEmail(customer.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+//        user.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+        user.setPassword(customer.getPassword());
         user.setRole(roleRepository.findByRole("CUSTOMER"));
         userRepository.save(user);
     }
