@@ -1,7 +1,10 @@
 package luabui.application.config.jwt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,21 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public final class JwtEntryPoint extends BasicAuthenticationEntryPoint {
+public final class JwtEntryPoint implements AuthenticationEntryPoint {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
+
+    // called if authentication failed
     @Override
-    public void commence(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException authException) throws IOException {
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException e)
+            throws IOException {
 
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                "Unauthorized");
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        setRealmName("tieu");
-        super.afterPropertiesSet();
+        logger.error("Unauthorized error. Message - {}", e.getMessage());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 }

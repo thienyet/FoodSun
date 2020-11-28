@@ -1,13 +1,24 @@
 package luabui.application.controller;
 
+import luabui.application.config.jwt.JwtProvider;
 import luabui.application.dto.CustomerDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
+import luabui.application.model.User;
 import luabui.application.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import luabui.application.service.UserService;
+import luabui.application.vo.request.LoginForm;
+import luabui.application.vo.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +35,7 @@ public class CustomerController {
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
+
     }
 
     @GetMapping(value = "/customers")

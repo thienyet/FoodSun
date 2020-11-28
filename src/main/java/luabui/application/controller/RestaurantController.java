@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,9 +22,11 @@ import java.util.List;
 public class RestaurantController {
     private RestaurantService restaurantService;
 
+
     @Autowired
     public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
+
     }
 
     /**

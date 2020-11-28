@@ -29,16 +29,11 @@ import java.util.List;
  */
 public class AdminController {
     private RoleService roleService;
-    private UserService userService;
-    private JwtProvider jwtProvider;
-    private AuthenticationManager authenticationManager;
 
     @Autowired
-    public AdminController(RoleService roleService, UserService userService, JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+    public AdminController(RoleService roleService) {
         this.roleService = roleService;
-        this.userService = userService;
-        this.jwtProvider = jwtProvider;
-        this.authenticationManager = authenticationManager;
+
     }
 
     /**
@@ -60,19 +55,4 @@ public class AdminController {
         return roleService.findAll();
     }
 
-    @PostMapping(value = "/admin/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
-        // throws Exception if authentication failed
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtProvider.generate(authentication);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.findByEmail(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getRole().getRole()));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
 }

@@ -49,10 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource);
 //                .passwordEncoder(bCryptPasswordEncoder);
 
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password(bCryptPasswordEncoder.encode("admin"))
-                .authorities("ADMIN");
+//        auth.inMemoryAuthentication()
+//                .withUser("admin")
+//                .password(bCryptPasswordEncoder.encode("admin"))
+//                .authorities;("ADMIN")
     }
 
     @Bean
@@ -68,9 +68,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTAURANT'})")
                 .antMatchers(HttpMethod.PUT, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTAURANT'})")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTAURANT'})")
-                .antMatchers(HttpMethod.GET, "restaurants/{restaurantId}/fooditems").access("hasAnyAuthority({'RESTAURANT'})")
-                .antMatchers(HttpMethod.GET, "restaurants/{restaurantId}/orders").access("hasAnyAuthority({'RESTAURANT'})")
-                .antMatchers(HttpMethod.GET, "restaurants/{restaurantId}/orders/{orderId}").access("hasAnyAuthority({'RESTAURANT'})")
+                .antMatchers(HttpMethod.GET, "restaurants/**/fooditems").access("hasAnyAuthority({'RESTAURANT'})")
+                .antMatchers(HttpMethod.GET, "restaurants/**/orders/**").access("hasAnyAuthority({'RESTAURANT'})")
                 .antMatchers(HttpMethod.GET, "/customers/**").access("hasAnyAuthority({'ADMIN', 'CUSTOMER'})")
                 .antMatchers(HttpMethod.POST, "/customers/**").access("hasAnyAuthority({'ADMIN'})")
                 .antMatchers(HttpMethod.PUT, "/customers/**").access("hasAnyAuthority({'ADMIN', 'CUSTOMER'})")
