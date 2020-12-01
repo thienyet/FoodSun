@@ -32,7 +32,7 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
+    @PostMapping("/foodsun/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
         // throws Exception if authentication failed
 
@@ -41,16 +41,12 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtProvider.generate(authentication);
-            System.out.println(jwt);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userService.findByEmail(userDetails.getUsername());
-            log.debug("Authen user.");
-            log.debug("User = ", user);
-            System.out.println(user.toString());
-            log.debug("Token = ", jwt);
             return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getRole().getRole()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
 }

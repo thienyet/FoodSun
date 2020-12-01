@@ -1,9 +1,6 @@
 package luabui.application.controller;
 
-import luabui.application.dto.FoodItemDTO;
-import luabui.application.dto.OrderDTO;
-import luabui.application.dto.OrderModificationDTO;
-import luabui.application.dto.RestaurantDTO;
+import luabui.application.dto.*;
 import luabui.application.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,12 @@ public class RestaurantController {
     public ResponseEntity<?> getAllRestaurants() {
         log.debug("Getting all Restaurants");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findAll());
+    }
+
+    @PostMapping(value = "/foodsun/signup/restaurants")
+    public ResponseEntity<RestaurantDTO> saveRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO) {
+        log.debug("Saving Restaurant.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantDTO));
     }
 
     /**

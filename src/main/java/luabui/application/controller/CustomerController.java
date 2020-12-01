@@ -91,7 +91,7 @@ public class CustomerController {
      * @param customerDTO
      * @return
      */
-    @PostMapping(value = "/customers")
+    @PostMapping(value = "/foodsun/signup/customer")
     public ResponseEntity<CustomerDTO> saveCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         log.debug("Saving Customer.");
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerDTO));

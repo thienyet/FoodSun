@@ -80,7 +80,7 @@ public class DeliveryGuyController {
      * @param deliveryGuyDTO
      * @return
      */
-    @PostMapping(value = "/deliveryguys")
+    @PostMapping(value = "/foodsun/signup/deliveryguys")
     public ResponseEntity<DeliveryGuyDTO> saveDeliveryGuy(@Valid @RequestBody DeliveryGuyDTO deliveryGuyDTO) {
         log.debug("Saving Delivery Guy.");
         return ResponseEntity.status(HttpStatus.CREATED).body(deliveryGuyService.save(deliveryGuyDTO));
