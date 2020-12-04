@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FoodItemDTO extends BaseEntityDTO {
+public class FoodItemDTO extends BaseEntityDTO{
 
     @NotNull(message = "Food Item Name cannot be null.")
     private String name;

@@ -11,6 +11,7 @@ import java.util.Set;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RestaurantDTO extends GeneralDetailsDTO {
+
     private String avatar;
     private String categoryItem;
     private Double maxCost;

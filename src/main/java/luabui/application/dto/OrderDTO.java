@@ -12,7 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderDTO extends BaseEntityDTO {
+public class OrderDTO extends BaseEntityDTO{
+
     private Long customerId;
 
     private Long deliveryGuyId;

@@ -10,7 +10,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class GeneralDetails extends BaseEntity {
+public abstract class GeneralDetails extends BaseEntity{
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 

@@ -3,6 +3,7 @@ package luabui.application.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import luabui.application.model.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
