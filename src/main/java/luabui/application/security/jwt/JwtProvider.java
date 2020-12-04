@@ -1,4 +1,4 @@
-package luabui.application.config.jwt;
+package luabui.application.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,14 +14,16 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+
     @Value("${jwtSecret}")
     private String jwtSecret;
+
     @Value("${jwtExpiration}")
     private int jwtExpiration;
 
     public String generate(Authentication authentication) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())

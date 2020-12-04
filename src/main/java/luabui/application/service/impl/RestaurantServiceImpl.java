@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +108,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         userRepository.saveAndFlush(user);
 
         return MapperUtil.toRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public List<RestaurantDTO> getRestaurantByDate(Date createDate) {
+        List<Restaurant> restaurants = restaurantRepository.getRestaurantsByDate(createDate);
+        return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
     }
 
     @Override

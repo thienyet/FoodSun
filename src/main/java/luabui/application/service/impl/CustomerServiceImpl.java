@@ -11,6 +11,7 @@ import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
 import luabui.application.model.Customer;
 import luabui.application.model.Order;
+import luabui.application.model.Restaurant;
 import luabui.application.model.User;
 import luabui.application.repository.CustomerRepository;
 import luabui.application.repository.OrderRepository;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +34,15 @@ public class CustomerServiceImpl implements CustomerService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -82,6 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPhoneNo(customerDTO.getPhoneNo());
 //        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
         customer.setPassword(customerDTO.getPassword());
+        customer.setAddress(customerDTO.getAddress());
         customerRepository.save(customer);
 
         user.setEmail(customer.getEmail());
@@ -132,6 +135,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         return MapperUtil.toOrderDTO(orderRepository.save(order));
+    }
+
+    @Override
+    public List<CustomerDTO> getCustomerByDate(Date createDate) {
+        List<Customer> customers = customerRepository.findCustomerByDate(createDate);
+        return customers.stream().map(MapperUtil :: toCustomerDTO).collect(Collectors.toList());
     }
 
     private Customer getCustomer(Long customerId) {

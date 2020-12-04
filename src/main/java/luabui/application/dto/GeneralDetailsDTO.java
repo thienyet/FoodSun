@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -31,5 +32,7 @@ public abstract class GeneralDetailsDTO extends BaseEntityDTO {
 
     @NotNull(message = "Address field cannot be null.")
     private String address;
+
+    private Date createDate;
 
 }

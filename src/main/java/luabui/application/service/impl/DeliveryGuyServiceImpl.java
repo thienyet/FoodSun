@@ -7,6 +7,7 @@ import luabui.application.dto.OrderModificationDTO;
 import luabui.application.exception.DeliveryGuyNotFoundException;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
+import luabui.application.model.Customer;
 import luabui.application.model.DeliveryGuy;
 import luabui.application.model.Order;
 import luabui.application.model.User;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,6 +131,12 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
             throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
         }
         return MapperUtil.toOrderDTO(orderRepository.save(order));
+    }
+
+    @Override
+    public List<DeliveryGuyDTO> getDeliveryGuyByDate(Date createDate) {
+        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findDeliveryGuyByDate(createDate);
+        return deliveryGuys.stream().map(MapperUtil :: toDeliveryGuyDTO).collect(Collectors.toList());
     }
 
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {

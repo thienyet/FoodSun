@@ -1,6 +1,5 @@
 package luabui.application.controller;
 
-import luabui.application.config.jwt.JwtProvider;
 import luabui.application.dto.CustomerDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;

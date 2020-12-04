@@ -4,6 +4,7 @@ import luabui.application.dto.DeliveryGuyDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
@@ -14,4 +15,6 @@ public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
     DeliveryGuyDTO update(DeliveryGuyDTO deliveryGuyDTO, Long deliveryGuyId);
 
     OrderDTO modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationDTO modification);
+
+    List<DeliveryGuyDTO> getDeliveryGuyByDate(Date createDate);
 }

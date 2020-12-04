@@ -4,6 +4,7 @@ package luabui.application.service;
 
 import luabui.application.dto.*;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
@@ -22,4 +23,6 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
     List<RestaurantDTO> findRestaurantByAddressLike(String address);
 
     RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
+
+    List<RestaurantDTO> getRestaurantByDate(Date createDate);
 }

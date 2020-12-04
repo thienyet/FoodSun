@@ -1,4 +1,4 @@
-package luabui.application.config.jwt;
+package luabui.application.security.jwt;
 
 import luabui.application.model.User;
 import luabui.application.service.UserService;
@@ -57,4 +57,5 @@ public class JwtFilter extends OncePerRequestFilter {
 
         return null;
     }
+
 }

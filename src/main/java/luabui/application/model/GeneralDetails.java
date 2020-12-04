@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -24,4 +25,7 @@ public abstract class GeneralDetails extends BaseEntity {
 
     @Column(nullable = false, length = 255)
     private String address;
+
+    @Column(name = "create_date")
+    private Date createDate;
 }

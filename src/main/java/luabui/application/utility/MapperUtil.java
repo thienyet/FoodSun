@@ -28,6 +28,7 @@ public class MapperUtil {
         customer.setAddress(customerDTO.getAddress());
 //        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
         customer.setPassword(customerDTO.getPassword());
+        customer.setCreateDate(customerDTO.getCreateDate());
         return customer;
     }
 
@@ -36,9 +37,11 @@ public class MapperUtil {
         customerDTO.setId(customer.getId());
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setName(customer.getName());
+        customerDTO.setPassword(customer.getPassword());
         customerDTO.setPhoneNo(customer.getPhoneNo());
         customerDTO.setAddress(customer.getAddress());
         customerDTO.setOrderIds(getSetOfId(customer.getOrders()));
+        customerDTO.setCreateDate(customer.getCreateDate());
         return customerDTO;
     }
 
@@ -112,6 +115,7 @@ public class MapperUtil {
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setAddress(deliveryGuyDTO.getAddress());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setCreateDate(deliveryGuyDTO.getCreateDate());
         return deliveryGuy;
     }
 
@@ -121,8 +125,10 @@ public class MapperUtil {
         deliveryGuyDTO.setId(deliveryGuy.getId());
         deliveryGuyDTO.setEmail(deliveryGuy.getEmail());
         deliveryGuyDTO.setName(deliveryGuy.getName());
+        deliveryGuyDTO.setPassword(deliveryGuy.getPassword());
         deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
         deliveryGuyDTO.setAddress(deliveryGuy.getAddress());
+        deliveryGuyDTO.setCreateDate(deliveryGuy.getCreateDate());
         deliveryGuyDTO.setOrderIds(getSetOfId(deliveryGuy.getOrders()));
         return deliveryGuyDTO;
     }
@@ -134,6 +140,7 @@ public class MapperUtil {
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setAddress(restaurantDTO.getAddress());
         restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setCreateDate(restaurantDTO.getCreateDate());
         return restaurant;
     }
 
@@ -143,7 +150,9 @@ public class MapperUtil {
         restaurantDTO.setName(restaurant.getName());
         restaurantDTO.setPhoneNo(restaurant.getPhoneNo());
         restaurantDTO.setEmail(restaurant.getEmail());
+        restaurantDTO.setPassword(restaurant.getPassword());
         restaurantDTO.setAddress(restaurant.getAddress());
+        restaurantDTO.setCreateDate(restaurant.getCreateDate());
         restaurantDTO.setOrderIds(getSetOfId(restaurant.getOrders()));
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
