@@ -14,6 +14,8 @@ import luabui.application.service.RestaurantService;
 import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -80,10 +82,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantDTO> findRestaurantByAddressLike(String address) {
+    public Page<RestaurantDTO> findRestaurantByAddressLike(String address, Pageable pageable) {
         log.debug("Find Restaurants By Address.");
-        List<Restaurant> restaurants = restaurantRepository.getRestaurantsByAddressLike(address);
-        return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
+        Page<Restaurant> pageRestaurant = restaurantRepository.getRestaurantsByAddressLike(address, pageable);
+        Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
+        return dtoPageRestaurant;
     }
 
     @Override
@@ -111,16 +114,23 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantDTO> getRestaurantByDate(Date createDate) {
-        List<Restaurant> restaurants = restaurantRepository.getRestaurantsByDate(createDate);
-        return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
+    public Page<RestaurantDTO> getRestaurantByDate(Date createDate, Pageable pageable) {
+        Page<Restaurant> pageRestaurant = restaurantRepository.getRestaurantsByDate(createDate, pageable);
+        Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
+        return dtoPageRestaurant;
     }
 
     @Override
-    public int countOrderOfRestaurant(Long restaurantId) {
-//        int numberOrder = restaurantRepository.countNumberOrderOfRes(restaurantId);
-//        return numberOrder;
+    public int countOrderOfRestaurantInOneDay(Long restaurantId, Date dateCheck) {
+//        int numberOrder = restaurantRepository.;
         return 0;
+    }
+
+    @Override
+    public Page<RestaurantDTO> findAll(Pageable pageable) {
+        Page<Restaurant> pageRestaurant = restaurantRepository.findAllInPage(pageable);
+        Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
+        return dtoPageRestaurant;
     }
 
     @Override

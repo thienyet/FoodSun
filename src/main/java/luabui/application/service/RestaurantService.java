@@ -3,6 +3,8 @@ package luabui.application.service;
 
 
 import luabui.application.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.Date;
 import java.util.List;
@@ -20,11 +22,13 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId);
 
-    List<RestaurantDTO> findRestaurantByAddressLike(String address);
+    Page<RestaurantDTO> findRestaurantByAddressLike(String address, Pageable pageable);
 
     RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
 
-    List<RestaurantDTO> getRestaurantByDate(Date createDate);
+    Page<RestaurantDTO> getRestaurantByDate(Date createDate, Pageable pageable);
 
-    int countOrderOfRestaurant(Long restaurantId, Date dateCheck);
+    int countOrderOfRestaurantInOneDay(Long restaurantId, Date dateCheck);
+
+    Page<RestaurantDTO> findAll(Pageable pageable);
 }
