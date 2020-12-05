@@ -66,7 +66,7 @@ public class MapperUtil {
         OrderFoodItem orderFoodItem = new OrderFoodItem();
         orderFoodItem.setFoodItem(foodItem);
         orderFoodItem.setOrder(order);
-        orderFoodItem.setTotalPrice(orderFoodItemDTO.getTotalPrice());
+        orderFoodItem.setPrice(orderFoodItemDTO.getPrice());
         orderFoodItem.setQuantity(orderFoodItemDTO.getQuantity());
         return orderFoodItem;
     }
@@ -75,7 +75,7 @@ public class MapperUtil {
         OrderFoodItemDTO orderFoodItemDTO = new OrderFoodItemDTO();
         orderFoodItemDTO.setId(orderFoodItem.getId());
         orderFoodItemDTO.setQuantity(orderFoodItem.getQuantity());
-        orderFoodItemDTO.setTotalPrice(orderFoodItem.getTotalPrice());
+        orderFoodItemDTO.setPrice(orderFoodItem.getPrice());
         orderFoodItemDTO.setFoodItemId(orderFoodItem.getFoodItem().getId());
         return orderFoodItemDTO;
     }
@@ -157,5 +157,6 @@ public class MapperUtil {
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
     }
+
 
 }

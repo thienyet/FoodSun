@@ -25,4 +25,6 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
     RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
 
     List<RestaurantDTO> getRestaurantByDate(Date createDate);
+
+    int countOrderOfRestaurant(Long restaurantId, Date dateCheck);
 }

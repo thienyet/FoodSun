@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
         Double totalPrice = 0.0;
 
         for (OrderFoodItem orderFoodItem : orderFoodItems) {
-            totalPrice += orderFoodItem.getTotalPrice();
+            totalPrice += orderFoodItem.getPrice()*orderFoodItem.getQuantity();
         }
 
         if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderDTO.getTotalPrice())) != 0) {
@@ -119,11 +119,12 @@ public class OrderServiceImpl implements OrderService {
         FoodItem foodItem = foodItemRepository.findById(foodItemId).orElseThrow(() -> new FoodItemNotFoundException(foodItemId));
         orderFoodItem.setFoodItem(foodItem);
         orderFoodItem.setQuantity(orderFoodItemDTO.getQuantity());
-        Double totalPrice = orderFoodItemDTO.getQuantity() * foodItem.getPrice();
-        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderFoodItemDTO.getTotalPrice())) != 0) {
-            throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemDTO.getTotalPrice());
-        }
-        orderFoodItem.setTotalPrice(totalPrice);
+        orderFoodItem.setPrice(foodItem.getPrice());
+//        Double totalPrice = orderFoodItemDTO.getQuantity() * foodItem.getPrice();
+//        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderFoodItemDTO.getPrice())) != 0) {
+//            throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemDTO.getTotalPrice());
+//        }
+//        orderFoodItem.setTotalPrice(totalPrice);
         return orderFoodItem;
     }
 

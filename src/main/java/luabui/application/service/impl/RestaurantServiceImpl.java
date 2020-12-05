@@ -117,6 +117,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public int countOrderOfRestaurant(Long restaurantId) {
+//        int numberOrder = restaurantRepository.countNumberOrderOfRes(restaurantId);
+//        return numberOrder;
+        return 0;
+    }
+
+    @Override
     public List<RestaurantDTO> findAll() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());

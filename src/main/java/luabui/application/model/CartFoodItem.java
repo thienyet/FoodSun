@@ -12,16 +12,17 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "order_food_item")
-public class OrderFoodItem extends BaseEntity {
+@Table(name = "cart_food_item")
+public class CartFoodItem extends BaseEntity{
+
     @ManyToOne
     @JoinColumn(name = "food_item_id")
     private FoodItem foodItem;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    @JsonBackReference(value = "order-orderFoodItems")
-    private Order order;
+    @JoinColumn(name = "cart_id")
+    @JsonBackReference(value = "cart-cartFoodItems")
+    private Cart cart;
 
     private Integer quantity;
     private Double price;

@@ -10,10 +10,9 @@ import javax.validation.constraints.Min;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderFoodItemDTO extends BaseEntityDTO{
+public class CartFoodItemDTO extends BaseEntityDTO{
 
     private Long foodItemId;
-
     @Min(value = 1, message = "Food Item Quantity should be at least 1.")
     @Max(value = 5, message = "Food Item Quantity should not exceed 5.")
     private Integer quantity;

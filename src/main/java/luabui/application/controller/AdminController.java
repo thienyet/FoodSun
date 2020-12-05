@@ -66,9 +66,17 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findAll());
     }
 
-    @GetMapping(value = "/admin/restaurants/{createDate}")
+    @GetMapping(value = "/admin/restaurants/createDate/{createDate}")
     public ResponseEntity<?> getAllRestaurantsByCreateDate(@PathVariable Date createDate) {
         log.debug("Getting all Restaurants by create Date");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantByDate(createDate));
     }
+
+    @GetMapping(value = "/admin/restaurants/area/{area}")
+    public ResponseEntity<?> getAllRestaurantsInArea(@PathVariable String area) {
+        log.debug("Getting all Restaurants in an area");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findRestaurantByAddressLike(area));
+    }
+
+
 }
