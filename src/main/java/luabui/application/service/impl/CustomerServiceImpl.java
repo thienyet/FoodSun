@@ -20,6 +20,8 @@ import luabui.application.repository.UserRepository;
 import luabui.application.service.CustomerService;
 import luabui.application.utility.MapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> findAll() {
-        log.debug("Returning Customer(s) from Service");
-        List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(MapperUtil:: toCustomerDTO).collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -138,9 +138,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> getCustomerByDate(Date createDate) {
-        List<Customer> customers = customerRepository.findCustomerByDate(createDate);
-        return customers.stream().map(MapperUtil :: toCustomerDTO).collect(Collectors.toList());
+    public Page<CustomerDTO> getCustomerByDate(Date createDate, Pageable pageable) {
+        Page<Customer> customers = customerRepository.getCustomersByDate(createDate, pageable);
+        Page<CustomerDTO> customerDTOPage = customers.map(MapperUtil :: toCustomerDTO);
+        return customerDTOPage;
+    }
+
+    @Override
+    public Page<CustomerDTO> findAll(Pageable pageable) {
+        Page<Customer> customerPage = customerRepository.findAll(pageable);
+        Page<CustomerDTO> customerDTOPage = customerPage.map(MapperUtil :: toCustomerDTO);
+        return customerDTOPage;
+    }
+
+    @Override
+    public Page<CustomerDTO> getCustomerByAddressLike(String address, Pageable pageable) {
+        Page<Customer> customerPage = customerRepository.getCustomersByAddressLike(address, pageable);
+        Page<CustomerDTO> customerDTOPage = customerPage.map(MapperUtil :: toCustomerDTO);
+        return customerDTOPage;
     }
 
     private Customer getCustomer(Long customerId) {

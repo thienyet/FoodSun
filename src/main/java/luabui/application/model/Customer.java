@@ -20,4 +20,9 @@ public class Customer extends GeneralDetails {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "user-orders")
     private Set<Order> orders = new HashSet<>();
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Cart cart;
+
 }

@@ -121,17 +121,18 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public int countOrderOfRestaurantInOneDay(Long restaurantId, Date dateCheck) {
-//        int numberOrder = restaurantRepository.;
-        return 0;
-    }
-
-    @Override
     public Page<RestaurantDTO> findAll(Pageable pageable) {
         Page<Restaurant> pageRestaurant = restaurantRepository.findAllInPage(pageable);
         Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
         return dtoPageRestaurant;
     }
+
+//    @Override
+//    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
+//        Page<Order> orderPage = restaurantRepository.getOrderOfResInOneDat(restaurantId, (Date) date, pageable);
+//        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+//        return orderDTOPage;
+//    }
 
     @Override
     public List<RestaurantDTO> findAll() {

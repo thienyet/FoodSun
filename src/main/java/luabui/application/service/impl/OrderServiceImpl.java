@@ -13,9 +13,12 @@ import luabui.application.service.OrderService;
 import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -111,6 +114,13 @@ public class OrderServiceImpl implements OrderService {
         orderFoodItemRepository.saveAll(orderFoodItems);
         return MapperUtil.toOrderDTO(order);
     }
+
+//    @Override
+//    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
+//        Page<Order> orderPage = orderRepository.getOrderOfResInOneDat(restaurantId, date, pageable);
+//        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+//        return orderDTOPage;
+//    }
 
     private OrderFoodItem toOrderFoodItem(OrderFoodItemDTO orderFoodItemDTO) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");

@@ -14,14 +14,11 @@ import java.util.Set;
 @Table(name = "cart")
 public class Cart extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JsonIgnore
+    @OneToOne()
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, orphanRemoval = true,
-            mappedBy = "cart")
+    @OneToMany(mappedBy = "cart")
     private Set<CartFoodItem> cartFoodItems = new HashSet<>();
 
     public Cart(Customer customer) {

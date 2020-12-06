@@ -19,6 +19,8 @@ import luabui.application.service.DeliveryGuyService;
 import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -134,9 +136,24 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     }
 
     @Override
-    public List<DeliveryGuyDTO> getDeliveryGuyByDate(Date createDate) {
-        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findDeliveryGuyByDate(createDate);
-        return deliveryGuys.stream().map(MapperUtil :: toDeliveryGuyDTO).collect(Collectors.toList());
+    public Page<DeliveryGuyDTO> getDeliveryGuyByDate(Date createDate, Pageable pageable) {
+        Page<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findDeliveryGuyByDate(createDate, pageable);
+        Page<DeliveryGuyDTO> deliveryGuyDTOS = deliveryGuys.map(MapperUtil :: toDeliveryGuyDTO);
+        return deliveryGuyDTOS;
+    }
+
+    @Override
+    public Page<DeliveryGuyDTO> getDeliveryGuyByAddress(String address, Pageable pageable) {
+        Page<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findDeliveryGuyByAddress(address, pageable);
+        Page<DeliveryGuyDTO> deliveryGuyDTOS = deliveryGuys.map(MapperUtil :: toDeliveryGuyDTO);
+        return deliveryGuyDTOS;
+    }
+
+    @Override
+    public Page<DeliveryGuyDTO> findAll(Pageable pageable) {
+        Page<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findAll(pageable);
+        Page<DeliveryGuyDTO> deliveryGuyDTOS = deliveryGuys.map(MapperUtil :: toDeliveryGuyDTO);
+        return deliveryGuyDTOS;
     }
 
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {

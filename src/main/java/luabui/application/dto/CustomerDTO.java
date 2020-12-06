@@ -14,5 +14,6 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDTO extends GeneralDetailsDTO {
 
+    Long cartId;
     Set<Long> orderIds = new HashSet<>();
 }

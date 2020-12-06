@@ -28,7 +28,6 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     Page<RestaurantDTO> getRestaurantByDate(Date createDate, Pageable pageable);
 
-    int countOrderOfRestaurantInOneDay(Long restaurantId, Date dateCheck);
-
     Page<RestaurantDTO> findAll(Pageable pageable);
+
 }
