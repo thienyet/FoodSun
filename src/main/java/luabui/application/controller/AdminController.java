@@ -19,6 +19,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@CrossOrigin
 /**
  * Controller to map all Admin Related operations.
  */
@@ -59,9 +60,9 @@ public class AdminController {
         return roleService.findAll();
     }
 
-    @GetMapping(value = "/admin/profile/{adminId}")
-    public ResponseEntity<?> getProfile(@PathVariable Long adminId) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(adminId));
+    @GetMapping(value = "/admin/profile")
+    public ResponseEntity<?> getProfile(@RequestParam String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByEmail(email));
     }
 
     @GetMapping(value = "/admin/restaurants")

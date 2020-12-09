@@ -19,4 +19,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query("select cus from Customer cus where cus.address like %:address%")
     Page<Customer> getCustomersByAddressLike(@Param("address")String address, Pageable pageable);
+
+    Customer findByEmail(String email);
 }

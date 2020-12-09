@@ -158,6 +158,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDTOPage;
     }
 
+    @Override
+    public CustomerDTO findByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email);
+        return MapperUtil.toCustomerDTO(customer);
+    }
+
     private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }

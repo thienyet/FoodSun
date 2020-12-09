@@ -3,13 +3,18 @@ package luabui.application.controller;
 import luabui.application.dto.CustomerDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
+import luabui.application.dto.RestaurantDTO;
+import luabui.application.model.Restaurant;
 import luabui.application.model.User;
 import luabui.application.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import luabui.application.service.RestaurantService;
 import luabui.application.service.UserService;
 import luabui.application.vo.request.LoginForm;
 import luabui.application.vo.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,25 +30,18 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@CrossOrigin
 /**
  * Controller to map all customer related actions.
  */
 public class CustomerController {
     private CustomerService customerService;
+    private RestaurantService restaurantService;
 
     @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, RestaurantService restaurantService) {
         this.customerService = customerService;
-
-    }
-
-    @GetMapping(value = "/customers")
-    /**
-     * Returns list of all customers.
-     */
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        log.debug("Getting All Customers.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.findAll());
+        this.restaurantService = restaurantService;
     }
 
     /**
@@ -136,4 +134,26 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
     }
 
+    @GetMapping(value = "/customers/restaurants")
+    public ResponseEntity<Page<RestaurantDTO>> getAllRestaurant(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<RestaurantDTO> restaurantPage = restaurantService.findAll(request);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantPage);
+    }
+
+    @GetMapping(value = "/customers/restaurants/address/{area}")
+    public ResponseEntity<?> getAllRestaurantsInArea(@PathVariable String area,
+                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                     @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        log.debug("Getting all Restaurants in an area");
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<RestaurantDTO> restaurantDTOList = restaurantService.findRestaurantByAddressLike(area, request);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
+    }
+
+    @GetMapping(value = "/customers/profile")
+    public ResponseEntity<?> getProfile(@RequestParam String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
+    }
 }
