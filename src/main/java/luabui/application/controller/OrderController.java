@@ -15,7 +15,6 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@CrossOrigin
 /**
  * Controller to perform order related components.
  */

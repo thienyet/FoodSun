@@ -19,7 +19,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@CrossOrigin
 /**
  * Controller to map all Admin Related operations.
  */
