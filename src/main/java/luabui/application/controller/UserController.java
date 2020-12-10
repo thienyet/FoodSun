@@ -23,6 +23,7 @@ import sun.rmi.runtime.Log;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired

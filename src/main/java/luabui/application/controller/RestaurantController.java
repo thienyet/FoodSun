@@ -14,6 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@CrossOrigin
 /**
  * Controller to perform restaurant related operations.
  */
