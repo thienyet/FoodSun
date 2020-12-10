@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    CorsConfigurationSource corsConfigurationSource()
 //    {
 //        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://foodgood.surge.sh/"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8085/"));
 //        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //        source.registerCorsConfiguration("/**", configuration);
