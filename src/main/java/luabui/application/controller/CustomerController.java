@@ -1,15 +1,15 @@
 package luabui.application.controller;
 
-import luabui.application.dto.CustomerDTO;
-import luabui.application.dto.OrderDTO;
-import luabui.application.dto.OrderModificationDTO;
-import luabui.application.dto.RestaurantDTO;
+import luabui.application.dto.*;
+import luabui.application.model.FoodItem;
 import luabui.application.model.Restaurant;
 import luabui.application.model.User;
 import luabui.application.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import luabui.application.service.FoodItemService;
 import luabui.application.service.RestaurantService;
 import luabui.application.service.UserService;
+import luabui.application.utility.MapperUtil;
 import luabui.application.vo.request.LoginForm;
 import luabui.application.vo.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,13 @@ import java.util.List;
 public class CustomerController {
     private CustomerService customerService;
     private RestaurantService restaurantService;
+    private FoodItemService foodItemService;
 
     @Autowired
-    public CustomerController(CustomerService customerService, RestaurantService restaurantService) {
+    public CustomerController(CustomerService customerService, RestaurantService restaurantService, FoodItemService foodItemService) {
         this.customerService = customerService;
         this.restaurantService = restaurantService;
+        this.foodItemService = foodItemService;
     }
 
     /**
@@ -94,18 +96,6 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerDTO));
     }
 
-    /**
-     * Modifies customer details in database.
-     *
-     * @param customerDTO
-     * @param customerId
-     * @return
-     */
-    @PutMapping(value = "/customers/{customerId}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
-        log.debug("Updating Customer.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.update(customerDTO, customerId));
-    }
 
     /**
      * Deletes customer from database with given id.
@@ -152,8 +142,36 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
     }
 
+    @GetMapping(value = "customers/restaurants/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long restaurantId) {
+        RestaurantDTO restaurantDTO = restaurantService.findById(restaurantId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTO);
+    }
+
+    @GetMapping(value = "customers/restaurants/{restaurantId}/foodItems")
+    public ResponseEntity<Page<FoodItemDTO>> getFoodItemByRestaurantId(@PathVariable Long restaurantId,
+                                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                       @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<FoodItem> foodItemPage = foodItemService.getRestaurantFoodItems(restaurantId, request);
+        Page<FoodItemDTO> foodItemDTOPage = foodItemPage.map(foodItem -> MapperUtil.toFoodItemDTO(foodItem));
+        return ResponseEntity.status(HttpStatus.OK).body(foodItemDTOPage);
+    }
+
+    @GetMapping(value = "customers/restaurants/{restaurantId}/foodItems/{foodItemId}")
+    public ResponseEntity<FoodItemDTO> getFoodItemOfResByFoodId(@PathVariable Long restaurantId,@PathVariable Long foodItemId) {
+        FoodItem foodItem = foodItemService.findById(foodItemId);
+        return ResponseEntity.status(HttpStatus.OK).body(MapperUtil.toFoodItemDTO(foodItem));
+    }
+
     @GetMapping(value = "/customers/profile")
     public ResponseEntity<?> getProfile(@RequestParam String email) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
     }
+
+//    @PutMapping(value = "/customers/profile/edit")
+//    public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
+//        log.debug("Updating Customer.");
+//        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.update(customerDTO, customerId));
+//    }
 }

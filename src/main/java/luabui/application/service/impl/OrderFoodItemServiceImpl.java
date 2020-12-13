@@ -1,5 +1,6 @@
 package luabui.application.service.impl;
 
+import luabui.application.dto.OrderFoodItemDTO;
 import luabui.application.exception.OrderFoodItemNotFoundException;
 import luabui.application.model.OrderFoodItem;
 import luabui.application.repository.OrderFoodItemRepository;
@@ -21,22 +22,29 @@ public class OrderFoodItemServiceImpl implements OrderFoodItemService {
     }
 
     @Override
-    public List<OrderFoodItem> findAll() {
+    public List<OrderFoodItemDTO> findAll() {
         log.debug("Getting Order FoodItems from Service");
-        return orderFoodItemRepository.findAll();
+//        return orderFoodItemRepository.findAll();
+        return null;
     }
 
     @Override
-    public OrderFoodItem findById(Long orderFoodItemId) {
+    public OrderFoodItemDTO findById(Long orderFoodItemId) {
         log.debug("Getting Order FoodItem By Id from Service");
-        return orderFoodItemRepository.findById(orderFoodItemId).orElseThrow(() -> new OrderFoodItemNotFoundException(orderFoodItemId));
+//        return orderFoodItemRepository.findById(orderFoodItemId).orElseThrow(() -> new OrderFoodItemNotFoundException(orderFoodItemId));
+        return null;
     }
 
     @Override
-    public OrderFoodItem save(OrderFoodItem newOrderFoodItem) {
-        log.debug("Saving Order FoodItems from Service");
-        return orderFoodItemRepository.save(newOrderFoodItem);
+    public OrderFoodItemDTO save(OrderFoodItemDTO newObject) {
+        return null;
     }
+
+//    @Override
+//    public OrderFoodItem save(OrderFoodItem newOrderFoodItem) {
+//        log.debug("Saving Order FoodItems from Service");
+//        return orderFoodItemRepository.save(newOrderFoodItem);
+//    }
 
     public OrderFoodItem update(OrderFoodItem orderFoodItem, Long orderFoodItemId) {
         log.debug("Updating Order FoodItem from Service");

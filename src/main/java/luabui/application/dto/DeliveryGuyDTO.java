@@ -12,5 +12,6 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeliveryGuyDTO extends GeneralDetailsDTO {
 
+    private Boolean isBusy;
     Set<Long> orderIds = new HashSet<>();
 }

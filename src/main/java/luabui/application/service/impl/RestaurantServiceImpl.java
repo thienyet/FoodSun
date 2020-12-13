@@ -74,12 +74,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         return MapperUtil.toOrderDTO(order);
     }
 
-    @Override
-    public List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId) {
-        log.debug("Getting all Food Items from Restaurant");
-        Restaurant restaurant = getRestaurant(restaurantId);
-        return restaurant.getFoodItems().stream().map(MapperUtil :: toFoodItemDTO).collect(Collectors.toList());
-    }
+//    @Override
+//    public Page<FoodItemDTO> getRestaurantFoodItems(Long restaurantId, Pageable pageable) {
+//        log.debug("Getting all Food Items from Restaurant");
+//        Restaurant restaurant = getRestaurant(restaurantId);
+//        Page<FoodItem> foodItemPage = restaurantRepository.
+//    }
 
     @Override
     public Page<RestaurantDTO> findRestaurantByAddressLike(String address, Pageable pageable) {
@@ -126,6 +126,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
         return dtoPageRestaurant;
     }
+
+//    @Override
+//    public RestaurantDTO getRestaurantById(Long restaurantId) {
+//        Restaurant restaurant = restaurantRepository.getRestaurantsByID(restaurantId);
+//        return MapperUtil.toRestaurantDTO(restaurant);
+//    }
 
 //    @Override
 //    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {

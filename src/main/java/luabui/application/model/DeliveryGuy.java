@@ -1,6 +1,7 @@
 package luabui.application.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,9 @@ import java.util.Set;
 @Entity
 @Table(name = "delivery_guy", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class DeliveryGuy extends GeneralDetails {
+
+    @Column
+    private Boolean isBusy = false;
 
     @OneToMany(mappedBy = "deliveryGuy", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "delivery-guy-orders")

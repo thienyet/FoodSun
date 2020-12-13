@@ -18,4 +18,7 @@ public interface DeliveryGuyRepository extends JpaRepository<DeliveryGuy, Long> 
     Page<DeliveryGuy> findDeliveryGuyByAddress(@Param("address") String address, Pageable pageable);
 
     Page<DeliveryGuy> findAll(Pageable pageable);
+
+    @Query("Select delivery from DeliveryGuy  delivery where delivery.isBusy = :isBusy ")
+    List<DeliveryGuy> findAllNotBusy(@Param("isBusy") Boolean busy);
 }

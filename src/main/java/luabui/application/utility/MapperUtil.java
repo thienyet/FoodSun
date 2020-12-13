@@ -116,6 +116,7 @@ public class MapperUtil {
         deliveryGuy.setAddress(deliveryGuyDTO.getAddress());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
         deliveryGuy.setCreateDate(deliveryGuyDTO.getCreateDate());
+        deliveryGuy.setIsBusy(deliveryGuyDTO.getIsBusy());
         return deliveryGuy;
     }
 
@@ -129,6 +130,7 @@ public class MapperUtil {
         deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
         deliveryGuyDTO.setAddress(deliveryGuy.getAddress());
         deliveryGuyDTO.setCreateDate(deliveryGuy.getCreateDate());
+        deliveryGuyDTO.setIsBusy(deliveryGuy.getIsBusy());
         deliveryGuyDTO.setOrderIds(getSetOfId(deliveryGuy.getOrders()));
         return deliveryGuyDTO;
     }

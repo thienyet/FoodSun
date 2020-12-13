@@ -92,6 +92,7 @@ public class OrderServiceImpl implements OrderService {
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
         order.setDeliveryGuy(getDeliveryGuy());
+
         order.setDeliveryAddress(orderDTO.getDeliveryAddress());
 
         List<OrderFoodItem> orderFoodItems = orderDTO.getOrderFoodItemDTOs().stream()
@@ -142,8 +143,11 @@ public class OrderServiceImpl implements OrderService {
         // TODO implement this in some non random way.
         // Should choose delivery who near restaurant or destination
         log.debug("Getting a delivery guy.");
-        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findAll();
+//        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findAll();
+        List<DeliveryGuy> deliveryGuysNotBusy = deliveryGuyRepository.findAllNotBusy(false);
         Random random = new Random();
-        return deliveryGuys.get(random.nextInt(deliveryGuys.size()));
+        DeliveryGuy deliveryGuy = deliveryGuysNotBusy.get(random.nextInt(deliveryGuysNotBusy.size()));
+        deliveryGuy.setIsBusy(true);
+        return deliveryGuy;
     }
 }

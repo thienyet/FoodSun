@@ -20,8 +20,6 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationDTO modification);
 
-    List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId);
-
     Page<RestaurantDTO> findRestaurantByAddressLike(String address, Pageable pageable);
 
     RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
@@ -29,5 +27,7 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
     Page<RestaurantDTO> getRestaurantByDate(Date createDate, Pageable pageable);
 
     Page<RestaurantDTO> findAll(Pageable pageable);
+
+//    RestaurantDTO getRestaurantById(Long restaurantId);
 
 }

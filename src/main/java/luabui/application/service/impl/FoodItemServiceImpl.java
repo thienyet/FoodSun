@@ -6,6 +6,8 @@ import luabui.application.repository.FoodItemRepository;
 import luabui.application.service.FoodItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,4 +50,15 @@ public class FoodItemServiceImpl implements FoodItemService {
         log.debug("Deleting Food Item By Id from Service.");
         foodItemRepository.deleteById(foodItemId);
     }
+
+    @Override
+    public Page<FoodItem> getRestaurantFoodItems(Long restaurantId, Pageable pageable) {
+        Page<FoodItem> foodItemPage = foodItemRepository.findAllInPage(restaurantId, pageable);
+        return foodItemPage;
+    }
+
+//    @Override
+//    public FoodItem getFoodItemByResIdAndFoodId(Long restaurantId, Long foodItemId) {
+//        return foodItemRepository.g;
+//    }
 }

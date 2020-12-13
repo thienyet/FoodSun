@@ -52,11 +52,11 @@ public class RestaurantController {
      * @param restaurantId
      * @return
      */
-    @GetMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public ResponseEntity<List<FoodItemDTO>> getRestaurantFoodItems(@PathVariable Long restaurantId) {
-        log.debug("Getting all FoodItems using restaurantId.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantFoodItems(restaurantId));
-    }
+//    @GetMapping(value = "/restaurants/{restaurantId}/fooditems")
+//    public ResponseEntity<List<FoodItemDTO>> getRestaurantFoodItems(@PathVariable Long restaurantId) {
+//        log.debug("Getting all FoodItems using restaurantId.");
+//        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantFoodItems(restaurantId));
+//    }
 
     /**
      * Returns list of orders taken by restaurant.
