@@ -22,21 +22,21 @@ public class OrderFoodItemServiceImpl implements OrderFoodItemService {
     }
 
     @Override
-    public List<OrderFoodItemDTO> findAll() {
+    public List<OrderFoodItem> findAll() {
         log.debug("Getting Order FoodItems from Service");
 //        return orderFoodItemRepository.findAll();
         return null;
     }
 
     @Override
-    public OrderFoodItemDTO findById(Long orderFoodItemId) {
+    public OrderFoodItem findById(Long orderFoodItemId) {
         log.debug("Getting Order FoodItem By Id from Service");
 //        return orderFoodItemRepository.findById(orderFoodItemId).orElseThrow(() -> new OrderFoodItemNotFoundException(orderFoodItemId));
         return null;
     }
 
     @Override
-    public OrderFoodItemDTO save(OrderFoodItemDTO newObject) {
+    public OrderFoodItem save(OrderFoodItem newObject) {
         return null;
     }
 

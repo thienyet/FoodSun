@@ -4,6 +4,7 @@ import luabui.application.dto.*;
 import luabui.application.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class RestaurantController {
      * @return
      */
 //    @GetMapping(value = "/restaurants/{restaurantId}/fooditems")
-//    public ResponseEntity<List<FoodItemDTO>> getRestaurantFoodItems(@PathVariable Long restaurantId) {
+//    public ResponseEntity<Page<FoodItemDTO>> getRestaurantFoodItems(@PathVariable Long restaurantId) {
 //        log.debug("Getting all FoodItems using restaurantId.");
 //        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantFoodItems(restaurantId));
 //    }
@@ -122,6 +123,12 @@ public class RestaurantController {
          * @return
          */ restaurantService.removeFoodItems(restaurantId, foodItemIds);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/restaurants/profile")
+    public ResponseEntity<RestaurantDTO> getProfile(@RequestParam String email) {
+        log.debug("Getting Restaurant by id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findByEmail(email));
     }
 
 }

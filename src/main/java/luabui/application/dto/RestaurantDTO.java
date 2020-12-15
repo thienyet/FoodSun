@@ -13,7 +13,7 @@ import java.util.Set;
 public class RestaurantDTO extends GeneralDetailsDTO {
 
     private String avatar;
-    private String categoryItem;
+    private Long categoryId;
     private Double maxCost;
     private Double minCost;
 

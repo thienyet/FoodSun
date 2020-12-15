@@ -5,6 +5,7 @@ import luabui.application.dto.FoodItemDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
 import luabui.application.dto.RestaurantDTO;
+import luabui.application.exception.NotFoundException;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
 import luabui.application.exception.RestaurantNotFoundException;
@@ -30,14 +31,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private OrderRepository orderRepository;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository, OrderRepository orderRepository, RoleRepository roleRepository, UserRepository userRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository, OrderRepository orderRepository, RoleRepository roleRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.restaurantRepository = restaurantRepository;
         this.foodItemRepository = foodItemRepository;
         this.orderRepository = orderRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.categoryRepository =  categoryRepository;
     }
 
     @Override
@@ -100,7 +103,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setPassword(restaurantDTO.getPassword());
         restaurant.setAddress(restaurantDTO.getAddress());
         restaurant.setAvatar(restaurantDTO.getAvatar());
-        restaurant.setCategoryItem(restaurantDTO.getCategoryItem());
+        Category category = categoryRepository.findById(restaurantDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Not Found category id"));
+        restaurant.setCategory(category);
         restaurant.setMaxCost(restaurantDTO.getMaxCost());
         restaurant.setMinCost(restaurantDTO.getMinCost());
 
@@ -125,6 +129,26 @@ public class RestaurantServiceImpl implements RestaurantService {
         Page<Restaurant> pageRestaurant = restaurantRepository.findAllInPage(pageable);
         Page<RestaurantDTO> dtoPageRestaurant = pageRestaurant.map(MapperUtil :: toRestaurantDTO);
         return dtoPageRestaurant;
+    }
+
+    @Override
+    public RestaurantDTO findByEmail(String email) {
+        Restaurant restaurant = restaurantRepository.findByEmail(email);
+        return MapperUtil.toRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public Page<RestaurantDTO> getRestaurantByName(String name, Pageable pageable) {
+        Page<Restaurant> restaurantPage = restaurantRepository.getRestaurantsByName(name, pageable);
+        Page<RestaurantDTO> restaurantDTOPage = restaurantPage.map(MapperUtil :: toRestaurantDTO);
+        return restaurantDTOPage;
+    }
+
+    @Override
+    public Page<RestaurantDTO> getRestaurantByCategory(Long categoryId, Pageable pageable) {
+        Page<Restaurant> restaurantPage = restaurantRepository.getRestaurantsByCategory(categoryId, pageable);
+        Page<RestaurantDTO> restaurantDTOPage = restaurantPage.map(MapperUtil :: toRestaurantDTO);
+        return restaurantDTOPage;
     }
 
 //    @Override
@@ -156,7 +180,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantDTO save(RestaurantDTO restaurantDTO) {
         log.debug("Saving Restaurant from Service.");
-        Restaurant restaurant = restaurantRepository.save(MapperUtil.toRestaurant(restaurantDTO));
+        Category category = categoryRepository.findById(restaurantDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Not Found"));
+        Restaurant restaurant = restaurantRepository.save(MapperUtil.toRestaurant(restaurantDTO, category));
         createUser(restaurant);
         return MapperUtil.toRestaurantDTO(restaurant);
     }

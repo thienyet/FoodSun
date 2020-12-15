@@ -29,5 +29,10 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
     Page<RestaurantDTO> findAll(Pageable pageable);
 
 //    RestaurantDTO getRestaurantById(Long restaurantId);
+    RestaurantDTO findByEmail(String email);
+
+    Page<RestaurantDTO> getRestaurantByName(String name, Pageable pageable);
+
+    Page<RestaurantDTO> getRestaurantByCategory(Long categoryId, Pageable pageable);
 
 }

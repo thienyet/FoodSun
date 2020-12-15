@@ -157,6 +157,19 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         return deliveryGuyDTOS;
     }
 
+    @Override
+    public Page<DeliveryGuyDTO> getDeliveryGuyByName(String name, Pageable pageable) {
+        Page<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findDeliveryGuyByName(name, pageable);
+        Page<DeliveryGuyDTO> deliveryGuyDTOS = deliveryGuys.map(MapperUtil :: toDeliveryGuyDTO);
+        return deliveryGuyDTOS;
+    }
+
+    @Override
+    public DeliveryGuyDTO findByEmail(String email) {
+        DeliveryGuy deliveryGuy = deliveryGuyRepository.findByEmail(email);
+        return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
+    }
+
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {
         return deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));
     }

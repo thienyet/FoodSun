@@ -3,6 +3,7 @@ package luabui.application.service;
 import luabui.application.dto.DeliveryGuyDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
+import luabui.application.model.DeliveryGuy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,7 @@ public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
     Page<DeliveryGuyDTO> getDeliveryGuyByAddress(String address, Pageable pageable);
 
     Page<DeliveryGuyDTO> findAll(Pageable pageable);
+
+    Page<DeliveryGuyDTO> getDeliveryGuyByName(String name, Pageable pageable);
+     DeliveryGuyDTO findByEmail(String email);
 }

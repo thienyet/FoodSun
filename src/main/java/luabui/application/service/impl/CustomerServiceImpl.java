@@ -9,14 +9,8 @@ import luabui.application.dto.OrderModificationDTO;
 import luabui.application.exception.CustomerNotFoundException;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
-import luabui.application.model.Customer;
-import luabui.application.model.Order;
-import luabui.application.model.Restaurant;
-import luabui.application.model.User;
-import luabui.application.repository.CustomerRepository;
-import luabui.application.repository.OrderRepository;
-import luabui.application.repository.RoleRepository;
-import luabui.application.repository.UserRepository;
+import luabui.application.model.*;
+import luabui.application.repository.*;
 import luabui.application.service.CustomerService;
 import luabui.application.utility.MapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +30,16 @@ public class CustomerServiceImpl implements CustomerService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private CartRepository cartRepository;
 //    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository, CartRepository cartRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.cartRepository = cartRepository;
 //        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -64,6 +60,9 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("Saving Customer(s) from Service");
         Customer customer = customerRepository.save(MapperUtil.toCustomer(newCustomer));
         createUser(customer);
+        Cart cart = new Cart(customer);
+        cart = cartRepository.save(cart);
+        customer.setCart(cart);
         return MapperUtil.toCustomerDTO(customer);
     }
 
@@ -164,6 +163,13 @@ public class CustomerServiceImpl implements CustomerService {
         return MapperUtil.toCustomerDTO(customer);
     }
 
+    @Override
+    public Page<CustomerDTO> getCustomerByName(String name, Pageable pageable) {
+        Page<Customer> customerPage = customerRepository.getCustomersByName(name, pageable);
+        Page<CustomerDTO> customerDTOPage = customerPage.map(MapperUtil :: toCustomerDTO);
+        return customerDTOPage;
+    }
+
     private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
@@ -180,4 +186,6 @@ public class CustomerServiceImpl implements CustomerService {
         user.setRole(roleRepository.findByRole("CUSTOMER"));
         userRepository.save(user);
     }
+
+
 }

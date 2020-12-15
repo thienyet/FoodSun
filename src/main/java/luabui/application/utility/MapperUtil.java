@@ -2,6 +2,7 @@ package luabui.application.utility;
 
 import luabui.application.constants.PaymentMode;
 import luabui.application.dto.*;
+import luabui.application.exception.FoodItemNotFoundException;
 import luabui.application.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,14 +43,24 @@ public class MapperUtil {
         customerDTO.setAddress(customer.getAddress());
         customerDTO.setOrderIds(getSetOfId(customer.getOrders()));
         customerDTO.setCreateDate(customer.getCreateDate());
+        customerDTO.setCartId(customer.getCart().getId());
         return customerDTO;
     }
 
     public static FoodItem toFoodItem(FoodItemDTO foodItemDTO, Restaurant restaurant) {
         FoodItem foodItem = new FoodItem();
         foodItem.setName(foodItemDTO.getName());
+        foodItem.setImage(foodItemDTO.getImage());
         foodItem.setPrice(foodItemDTO.getPrice());
         foodItem.setRestaurant(restaurant);
+        return foodItem;
+    }
+
+    public static FoodItem toFoodItem2(FoodItemDTO foodItemDTO) {
+        FoodItem foodItem = new FoodItem();
+        foodItem.setName(foodItemDTO.getName());
+        foodItem.setImage(foodItemDTO.getImage());
+        foodItem.setPrice(foodItemDTO.getPrice());
         return foodItem;
     }
 
@@ -135,7 +146,7 @@ public class MapperUtil {
         return deliveryGuyDTO;
     }
 
-    public static Restaurant toRestaurant(RestaurantDTO restaurantDTO) {
+    public static Restaurant toRestaurant(RestaurantDTO restaurantDTO, Category category) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(restaurantDTO.getName());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
@@ -143,6 +154,10 @@ public class MapperUtil {
         restaurant.setAddress(restaurantDTO.getAddress());
         restaurant.setPassword(restaurantDTO.getPassword());
         restaurant.setCreateDate(restaurantDTO.getCreateDate());
+        restaurant.setAvatar(restaurantDTO.getAvatar());
+        restaurant.setCategory(category);
+        restaurant.setMaxCost(restaurantDTO.getMaxCost());
+        restaurant.setMinCost(restaurantDTO.getMinCost());
         return restaurant;
     }
 
@@ -155,10 +170,86 @@ public class MapperUtil {
         restaurantDTO.setPassword(restaurant.getPassword());
         restaurantDTO.setAddress(restaurant.getAddress());
         restaurantDTO.setCreateDate(restaurant.getCreateDate());
+        restaurantDTO.setAvatar(restaurant.getAvatar());
+        restaurantDTO.setCategoryId(restaurant.getCategory().getId());
+        restaurantDTO.setMaxCost(restaurant.getMaxCost());
+        restaurantDTO.setMinCost(restaurant.getMinCost());
         restaurantDTO.setOrderIds(getSetOfId(restaurant.getOrders()));
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
     }
 
+    public static CartFoodItem toCartFoodItem(CartFoodItemDTO cartFoodItemDTO, FoodItem foodItem, Cart cart) {
+        CartFoodItem cartFoodItem = new CartFoodItem();
+        cartFoodItem.setFoodItem(foodItem);
+        cartFoodItem.setCart(cart);
+        cartFoodItem.setPrice(cartFoodItemDTO.getPrice());
+        cartFoodItem.setQuantity(cartFoodItemDTO.getQuantity());
+        return cartFoodItem;
+    }
 
+    public static CartFoodItemDTO toCartFoodItemDTO(CartFoodItem cartFoodItem) {
+        CartFoodItemDTO cartFoodItemDTO = new CartFoodItemDTO();
+        cartFoodItemDTO.setId(cartFoodItem.getId());
+        cartFoodItemDTO.setQuantity(cartFoodItem.getQuantity());
+        cartFoodItemDTO.setPrice(cartFoodItem.getPrice());
+        cartFoodItemDTO.setFoodItemId(cartFoodItem.getFoodItem().getId());
+        return cartFoodItemDTO;
+    }
+
+    public static CartDTO toCartDTO(Cart cart) {
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setId(cart.getId());
+        cartDTO.setCustomerId(cart.getCustomer().getId());
+        Set<CartFoodItemDTO> cartFoodItemDTOs = cart.getCartFoodItems().stream()
+                .map(MapperUtil :: toCartFoodItemDTO).collect(Collectors.toSet());
+        cartDTO.setCartFoodItemDTOs(cartFoodItemDTOs);
+        return cartDTO;
+    }
+
+    public static Cart toCart(CartDTO cartDTO) {
+        Cart cart = new Cart();
+        return cart;
+    }
+
+    public static Admin toAdmin(AdminDTO adminDTO) {
+        Admin admin = new Admin();
+        admin.setName(adminDTO.getName());
+        admin.setPhoneNo(adminDTO.getPhoneNo());
+        admin.setEmail(adminDTO.getEmail());
+        admin.setAddress(adminDTO.getAddress());
+        admin.setPassword(adminDTO.getPassword());
+        admin.setCreateDate(adminDTO.getCreateDate());
+        return admin;
+    }
+
+    public static AdminDTO toAdminDTO(Admin admin) {
+        AdminDTO adminDTO = new AdminDTO();
+        adminDTO.setId(admin.getId());
+        adminDTO.setEmail(admin.getEmail());
+        adminDTO.setName(admin.getName());
+        adminDTO.setPassword(admin.getPassword());
+        adminDTO.setPhoneNo(admin.getPhoneNo());
+        adminDTO.setAddress(admin.getAddress());
+        adminDTO.setCreateDate(admin.getCreateDate());
+        return adminDTO;
+    }
+
+    public static Category toCategory(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+        category.setDescription(categoryDTO.getDescription());
+        return category;
+    }
+
+    public static CategoryDTO toCategoryDTO(Category category) {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(category.getId());
+        categoryDTO.setName(category.getName());
+        categoryDTO.setDescription(category.getDescription());
+        Set<RestaurantDTO> restaurantDTOS = category.getRestaurants().stream()
+                .map(MapperUtil :: toRestaurantDTO).collect(Collectors.toSet());
+        categoryDTO.setRestaurantIds(getSetOfId(category.getRestaurants()));
+        return categoryDTO;
+    }
 }

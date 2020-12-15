@@ -1,7 +1,7 @@
 package luabui.application.service;
 
 
-import luabui.application.dto.OrderFoodItemDTO;
+import luabui.application.model.OrderFoodItem;
 
-public interface OrderFoodItemService extends CrudService<OrderFoodItemDTO, Long> {
+public interface OrderFoodItemService extends CrudService<OrderFoodItem, Long> {
 }

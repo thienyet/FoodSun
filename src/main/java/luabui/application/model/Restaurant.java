@@ -1,5 +1,6 @@
 package luabui.application.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,6 @@ public class Restaurant extends GeneralDetails {
     @Column(length = 255)
     private String avatar;
 
-    @Column(length = 255)
-    private String categoryItem;
-
     @Column
     private Double maxCost;
 
@@ -29,8 +27,13 @@ public class Restaurant extends GeneralDetails {
     @Column
     private Double ratingValue;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @JsonBackReference(value = "category-restaurants")
+    private Category category;
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "restaurant-foodItems")
+//    @JsonManagedReference(value = "restaurant-foodItems")
     private Set<FoodItem> foodItems = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

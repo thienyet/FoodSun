@@ -126,4 +126,9 @@ public class DeliveryGuyController {
         deliveryGuyService.deleteById(deliveryGuyId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/deliveryguys/profile")
+    public ResponseEntity<DeliveryGuyDTO> getProfile(@RequestParam String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.findByEmail(email));
+    }
 }
