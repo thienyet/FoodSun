@@ -37,7 +37,7 @@ public class OrderController {
      * @param orderDTO
      * @return
      */
-    @PostMapping("/orders")
+    @PostMapping("/customers/orders")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
         log.debug("Creating new Order.");
         return ResponseEntity.status(HttpStatus.OK).body(orderService.createOrder(orderDTO));

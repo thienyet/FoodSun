@@ -14,5 +14,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 //    @Query("select order from Order order where  order.restaurant.id = :restaurantId and order.timestamp = :date")
 //    Page<Order> getOrderOfResInOneDat(@Param("restaurantId")Long restaurantId, @Param("date") Date date, Pageable pageable);
-
 }

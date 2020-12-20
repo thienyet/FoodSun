@@ -178,9 +178,9 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
     }
 
-//    @PutMapping(value = "/customers/profile/edit")
-//    public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
-//        log.debug("Updating Customer.");
-//        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.update(customerDTO, customerId));
-//    }
+    @PutMapping(value = "/customers/profile/edit")
+    public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
+        log.debug("Updating Customer.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.update(customerDTO, customerId));
+    }
 }

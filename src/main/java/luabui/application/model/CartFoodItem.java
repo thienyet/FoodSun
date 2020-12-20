@@ -26,4 +26,13 @@ public class CartFoodItem extends BaseEntity{
 
     private Integer quantity;
     private Double price;
+
+    public CartFoodItem(FoodItem foodItem, Integer quantity) {
+        this.foodItem = foodItem;
+        this.quantity = quantity;
+    }
+
+    public CartFoodItem() {
+
+    }
 }
