@@ -19,4 +19,5 @@ public class FoodItemDTO extends BaseEntityDTO{
     private String image;
     private Double price;
     private Long restaurantId;
+    private Boolean isDeleted;
 }

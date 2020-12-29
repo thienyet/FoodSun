@@ -2,6 +2,7 @@ package luabui.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import luabui.application.model.BaseEntity;
 import org.hibernate.validator.constraints.Length;
@@ -35,5 +36,7 @@ public abstract class GeneralDetailsDTO extends BaseEntityDTO {
     private String address;
 
     private Date createDate;
+
+    private Boolean isActive;
 
 }

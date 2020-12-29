@@ -151,11 +151,62 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantDTOPage;
     }
 
-//    @Override
-//    public RestaurantDTO getRestaurantById(Long restaurantId) {
-//        Restaurant restaurant = restaurantRepository.getRestaurantsByID(restaurantId);
-//        return MapperUtil.toRestaurantDTO(restaurant);
-//    }
+    @Override
+    public RestaurantDTO changeStatus(Long restaurantId) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        User user = userRepository.findByEmail(restaurant.getEmail());
+        restaurant.setIsActive(!restaurant.getIsActive());
+        restaurantRepository.save(restaurant);
+
+        user.setIsActive(restaurant.getIsActive());
+        userRepository.saveAndFlush(user);
+        return MapperUtil.toRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public Page<FoodItemDTO> getFoodItemByRestaurantId(Long restaurantId, Pageable pageable) {
+        Page<FoodItem> foodItemPage = foodItemRepository.findAllInPage(restaurantId, pageable);
+        Page<FoodItemDTO> foodItemDTOPage = foodItemPage.map(MapperUtil :: toFoodItemDTO);
+        return foodItemDTOPage;
+    }
+
+    @Override
+    public FoodItemDTO findFoodItemById(Long fooditemId) {
+        FoodItem foodItem = foodItemRepository.findById(fooditemId).orElseThrow(() -> new NotFoundException("Not Found"));
+        return MapperUtil.toFoodItemDTO(foodItem);
+    }
+
+    @Override
+    public Page<FoodItemDTO> getFoodItemByName(String name, Pageable pageable) {
+        Page<FoodItem> foodItemPage = foodItemRepository.findByName(name, pageable);
+        Page<FoodItemDTO> foodItemDTOPage = foodItemPage.map(MapperUtil :: toFoodItemDTO);
+        return foodItemDTOPage;
+    }
+
+    @Override
+    public FoodItemDTO editFoodItem(Long fooditemId, FoodItemDTO foodItemDTO) {
+        FoodItem foodItem = foodItemRepository.findById(fooditemId).orElseThrow(() -> new NotFoundException("Not Found"));
+        foodItem.setName(foodItemDTO.getName());
+        foodItem.setPrice(foodItemDTO.getPrice());
+        foodItem.setImage(foodItemDTO.getImage());
+        foodItemRepository.save(foodItem);
+        return MapperUtil.toFoodItemDTO(foodItem);
+    }
+
+    @Override
+    public FoodItemDTO updateStatus(Long foodItemId) {
+        FoodItem foodItem = foodItemRepository.findById(foodItemId).orElseThrow(() -> new NotFoundException("Not Found"));
+        foodItem.setIsDeleted(true);
+        foodItemRepository.save(foodItem);
+        return MapperUtil.toFoodItemDTO(foodItem);
+    }
+
+    @Override
+    public FoodItemDTO addFoodItem(Long restaurantId, FoodItemDTO foodItemDTO) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        FoodItem foodItem = foodItemRepository.save(MapperUtil.toFoodItem(foodItemDTO, restaurant));
+        return MapperUtil.toFoodItemDTO(foodItem);
+    }
 
 //    @Override
 //    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {

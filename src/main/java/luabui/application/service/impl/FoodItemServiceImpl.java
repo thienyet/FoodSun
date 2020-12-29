@@ -57,8 +57,4 @@ public class FoodItemServiceImpl implements FoodItemService {
         return foodItemPage;
     }
 
-//    @Override
-//    public FoodItem getFoodItemByResIdAndFoodId(Long restaurantId, Long foodItemId) {
-//        return foodItemRepository.g;
-//    }
 }

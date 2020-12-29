@@ -22,6 +22,9 @@ public class Category extends BaseEntity{
     @Column(length = 255)
     private String description;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 //    @JsonManagedReference(value = "category-restaurants")
     private Set<Restaurant> restaurants = new HashSet<>();

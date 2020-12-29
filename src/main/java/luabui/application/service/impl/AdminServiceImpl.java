@@ -3,10 +3,9 @@ package luabui.application.service.impl;
 import luabui.application.dto.AdminDTO;
 import luabui.application.exception.AdminNotFoundException;
 import luabui.application.exception.CustomerNotFoundException;
-import luabui.application.model.Admin;
-import luabui.application.model.Cart;
-import luabui.application.model.Customer;
-import luabui.application.model.User;
+import luabui.application.exception.NotFoundException;
+import luabui.application.exception.RestaurantNotFoundException;
+import luabui.application.model.*;
 import luabui.application.repository.AdminRepository;
 import luabui.application.repository.RoleRepository;
 import luabui.application.repository.UserRepository;
@@ -34,6 +33,43 @@ public class AdminServiceImpl implements AdminService {
     public AdminDTO findByEmail(String email) {
         Admin admin = adminRepository.findByEmail(email);
         return MapperUtil.toAdminDTO(admin);
+    }
+
+    @Override
+    public AdminDTO update(AdminDTO adminDTO, Long adminId) {
+        Admin admin  = getAdmin(adminId);
+        User user = userRepository.findByEmail(admin.getEmail());
+        admin.setEmail(adminDTO.getEmail());
+        admin.setPhoneNo(adminDTO.getPhoneNo());
+        admin.setName(adminDTO.getName());
+        admin.setPassword(adminDTO.getPassword());
+        admin.setAddress(adminDTO.getAddress());
+
+        adminRepository.save(admin);
+
+        user.setEmail(admin.getEmail());
+        user.setPassword(admin.getPassword());
+        userRepository.saveAndFlush(user);
+
+        return MapperUtil.toAdminDTO(admin);
+    }
+
+    @Override
+    public AdminDTO changeStatus(Long adminId) {
+        Admin admin = getAdmin(adminId);
+        User user = userRepository.findByEmail(admin.getEmail());
+        admin.setIsActive(!admin.getIsActive());
+        adminRepository.save(admin);
+
+        user.setIsActive(admin.getIsActive());
+        userRepository.saveAndFlush(user);
+        return MapperUtil.toAdminDTO(admin);
+    }
+
+    @Override
+    public List<AdminDTO> findByName(String name) {
+        List<Admin> adminList = adminRepository.findByName(name);
+        return adminList.stream().map(MapperUtil :: toAdminDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -66,6 +102,11 @@ public class AdminServiceImpl implements AdminService {
 //        user.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         user.setPassword(admin.getPassword());
         user.setRole(roleRepository.findByRole("ADMIN"));
+        user.setIsActive(admin.getIsActive());
         userRepository.save(user);
+    }
+
+    private Admin getAdmin(Long adminId) {
+        return adminRepository.findById(adminId).orElseThrow(() -> new NotFoundException("Not found admin with id " + adminId));
     }
 }

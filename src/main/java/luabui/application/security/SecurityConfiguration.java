@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/admin/**").access("hasAuthority('ADMIN')")
+                .antMatchers("/admins/**").access("hasAuthority('ADMIN')")
                 .antMatchers("/restaurants/**").access("hasAnyAuthority('RESTAURANT')")
                 .antMatchers("/deliveryguys/**").access("hasAnyAuthority('DELIVERY')")
                 .antMatchers("/customers/cart/**").access("hasAnyAuthority('CUSTOMER')")

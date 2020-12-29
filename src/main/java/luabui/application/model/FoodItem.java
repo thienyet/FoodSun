@@ -20,6 +20,9 @@ public class FoodItem extends BaseEntity {
     @Column(length = 255)
     private String image;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference(value = "restaurant-foodItems")

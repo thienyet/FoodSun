@@ -16,7 +16,7 @@ import java.util.Set;
 public class DeliveryGuy extends GeneralDetails {
 
     @Column
-    private Boolean isBusy = false;
+    private Boolean isBusy;
 
     @OneToMany(mappedBy = "deliveryGuy", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "delivery-guy-orders")

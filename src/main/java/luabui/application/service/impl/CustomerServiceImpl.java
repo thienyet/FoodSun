@@ -170,6 +170,17 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDTOPage;
     }
 
+    @Override
+    public CustomerDTO changeStatus(Long customerId) {
+        Customer customer = getCustomer(customerId);
+        User user = userRepository.findByEmail(customer.getEmail());
+        customer.setIsActive(!customer.getIsActive());
+        customerRepository.save(customer);
+        user.setIsActive(customer.getIsActive());
+        userRepository.saveAndFlush(user);
+        return MapperUtil.toCustomerDTO(customer);
+    }
+
     private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }

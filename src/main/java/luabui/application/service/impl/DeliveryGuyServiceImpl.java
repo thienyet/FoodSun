@@ -170,6 +170,25 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
     }
 
+    @Override
+    public DeliveryGuyDTO changeStatus(Long deliveryguyId) {
+        DeliveryGuy deliveryGuy = getDeliveryGuy(deliveryguyId);
+        User user = userRepository.findByEmail(deliveryGuy.getEmail());
+        deliveryGuy.setIsActive(!deliveryGuy.getIsActive());
+        deliveryGuyRepository.save(deliveryGuy);
+        user.setIsActive(deliveryGuy.getIsActive());
+        userRepository.saveAndFlush(user);
+        return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
+    }
+
+    @Override
+    public DeliveryGuyDTO changeBusy(Long deliveryguyId) {
+        DeliveryGuy deliveryGuy = getDeliveryGuy(deliveryguyId);
+        deliveryGuy.setIsBusy(!deliveryGuy.getIsBusy());
+        deliveryGuyRepository.save(deliveryGuy);
+        return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
+    }
+
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {
         return deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));
     }

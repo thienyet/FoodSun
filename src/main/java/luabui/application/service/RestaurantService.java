@@ -35,4 +35,17 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     Page<RestaurantDTO> getRestaurantByCategory(Long categoryId, Pageable pageable);
 
+    RestaurantDTO changeStatus(Long restaurantId);
+
+    Page<FoodItemDTO> getFoodItemByRestaurantId(Long restaurantId, Pageable pageable);
+
+    FoodItemDTO findFoodItemById(Long fooditemId);
+
+    Page<FoodItemDTO> getFoodItemByName(String name, Pageable pageable);
+
+    FoodItemDTO editFoodItem(Long fooditemId, FoodItemDTO foodItemDTO);
+
+    FoodItemDTO updateStatus(Long foodItemId);
+
+    FoodItemDTO addFoodItem(Long restaurantId, FoodItemDTO foodItemDTO);
 }

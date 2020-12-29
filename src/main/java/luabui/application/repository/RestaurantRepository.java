@@ -21,15 +21,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Query("SELECT res FROM Restaurant res")
     Page<Restaurant> findAllInPage(Pageable pageable);
 
-//    @Query("Select res.name, res.address, res.avatar from Restaurant res where res.id = :resId")
-//    Restaurant getRestaurantsByID(@Param("resId") Long restaurantId);
-
     Restaurant findByEmail(String email);
 
     @Query("select res from Restaurant res where res.name like %:name%")
     Page<Restaurant> getRestaurantsByName(@Param("name")String name, Pageable pageable);
 
-    @Query("select res from Restaurant res where res.category.id = :category")
+    @Query("select res from Restaurant res where res.category.id = :category and res.isActive = true")
     Page<Restaurant> getRestaurantsByCategory(@Param("category")Long categoryId, Pageable pageable);
 
 

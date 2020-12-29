@@ -30,6 +30,7 @@ public class MapperUtil {
 //        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
         customer.setPassword(customerDTO.getPassword());
         customer.setCreateDate(customerDTO.getCreateDate());
+        customer.setIsActive(customerDTO.getIsActive());
         return customer;
     }
 
@@ -43,6 +44,7 @@ public class MapperUtil {
         customerDTO.setAddress(customer.getAddress());
         customerDTO.setOrderIds(getSetOfId(customer.getOrders()));
         customerDTO.setCreateDate(customer.getCreateDate());
+        customerDTO.setIsActive(customer.getIsActive());
         customerDTO.setCartId(customer.getCart().getId());
         return customerDTO;
     }
@@ -53,6 +55,7 @@ public class MapperUtil {
         foodItem.setImage(foodItemDTO.getImage());
         foodItem.setPrice(foodItemDTO.getPrice());
         foodItem.setRestaurant(restaurant);
+        foodItem.setIsDeleted(foodItemDTO.getIsDeleted());
         return foodItem;
     }
 
@@ -61,6 +64,7 @@ public class MapperUtil {
         foodItem.setName(foodItemDTO.getName());
         foodItem.setImage(foodItemDTO.getImage());
         foodItem.setPrice(foodItemDTO.getPrice());
+        foodItem.setIsDeleted(foodItemDTO.getIsDeleted());
         return foodItem;
     }
 
@@ -70,6 +74,7 @@ public class MapperUtil {
         foodItemDTO.setName(foodItem.getName());
         foodItemDTO.setPrice(foodItem.getPrice());
         foodItemDTO.setRestaurantId(foodItem.getRestaurant().getId());
+        foodItemDTO.setIsDeleted(foodItem.getIsDeleted());
         return foodItemDTO;
     }
 
@@ -127,6 +132,7 @@ public class MapperUtil {
         deliveryGuy.setAddress(deliveryGuyDTO.getAddress());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
         deliveryGuy.setCreateDate(deliveryGuyDTO.getCreateDate());
+        deliveryGuy.setIsActive(deliveryGuyDTO.getIsActive());
         deliveryGuy.setIsBusy(deliveryGuyDTO.getIsBusy());
         return deliveryGuy;
     }
@@ -141,6 +147,7 @@ public class MapperUtil {
         deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
         deliveryGuyDTO.setAddress(deliveryGuy.getAddress());
         deliveryGuyDTO.setCreateDate(deliveryGuy.getCreateDate());
+        deliveryGuyDTO.setIsActive(deliveryGuy.getIsActive());
         deliveryGuyDTO.setIsBusy(deliveryGuy.getIsBusy());
         deliveryGuyDTO.setOrderIds(getSetOfId(deliveryGuy.getOrders()));
         return deliveryGuyDTO;
@@ -154,6 +161,7 @@ public class MapperUtil {
         restaurant.setAddress(restaurantDTO.getAddress());
         restaurant.setPassword(restaurantDTO.getPassword());
         restaurant.setCreateDate(restaurantDTO.getCreateDate());
+        restaurant.setIsActive(restaurantDTO.getIsActive());
         restaurant.setAvatar(restaurantDTO.getAvatar());
         restaurant.setCategory(category);
         restaurant.setMaxCost(restaurantDTO.getMaxCost());
@@ -170,6 +178,7 @@ public class MapperUtil {
         restaurantDTO.setPassword(restaurant.getPassword());
         restaurantDTO.setAddress(restaurant.getAddress());
         restaurantDTO.setCreateDate(restaurant.getCreateDate());
+        restaurantDTO.setIsActive(restaurant.getIsActive());
         restaurantDTO.setAvatar(restaurant.getAvatar());
         restaurantDTO.setCategoryId(restaurant.getCategory().getId());
         restaurantDTO.setMaxCost(restaurant.getMaxCost());
@@ -220,6 +229,7 @@ public class MapperUtil {
         admin.setAddress(adminDTO.getAddress());
         admin.setPassword(adminDTO.getPassword());
         admin.setCreateDate(adminDTO.getCreateDate());
+        admin.setIsActive(adminDTO.getIsActive());
         return admin;
     }
 
@@ -232,6 +242,7 @@ public class MapperUtil {
         adminDTO.setPhoneNo(admin.getPhoneNo());
         adminDTO.setAddress(admin.getAddress());
         adminDTO.setCreateDate(admin.getCreateDate());
+        adminDTO.setIsActive(admin.getIsActive());
         return adminDTO;
     }
 
@@ -239,6 +250,7 @@ public class MapperUtil {
         Category category = new Category();
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
+        category.setIsDeleted(categoryDTO.getIsDeleted());
         return category;
     }
 
@@ -250,6 +262,7 @@ public class MapperUtil {
         Set<RestaurantDTO> restaurantDTOS = category.getRestaurants().stream()
                 .map(MapperUtil :: toRestaurantDTO).collect(Collectors.toSet());
         categoryDTO.setRestaurantIds(getSetOfId(category.getRestaurants()));
+        categoryDTO.setIsDeleted(category.getIsDeleted());
         return categoryDTO;
     }
 }

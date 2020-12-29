@@ -27,4 +27,8 @@ public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
 
     Page<DeliveryGuyDTO> getDeliveryGuyByName(String name, Pageable pageable);
      DeliveryGuyDTO findByEmail(String email);
+
+     DeliveryGuyDTO changeStatus(Long deliveryguyId);
+
+     DeliveryGuyDTO changeBusy(Long deliveryguyId);
 }

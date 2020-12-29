@@ -28,4 +28,7 @@ public abstract class GeneralDetails extends BaseEntity{
 
     @Column(name = "create_date")
     private Date createDate;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 }

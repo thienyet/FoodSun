@@ -57,6 +57,20 @@ public class CategoryServiceImpl implements CategoryService {
         return MapperUtil.toCategoryDTO(category);
     }
 
+    @Override
+    public CategoryDTO findByName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return MapperUtil.toCategoryDTO(category);
+    }
+
+    @Override
+    public CategoryDTO updateDelete(Long categoryId) {
+        Category category = getCategory(categoryId);
+        category.setIsDeleted(true);
+        categoryRepository.save(category);
+        return MapperUtil.toCategoryDTO(category);
+    }
+
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(categoryId + " not found"));
     }

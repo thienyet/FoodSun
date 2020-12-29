@@ -1,10 +1,12 @@
 package luabui.application.controller;
 
 import luabui.application.dto.*;
+import luabui.application.service.FoodItemService;
 import luabui.application.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +23,13 @@ import java.util.List;
  */
 public class RestaurantController {
     private RestaurantService restaurantService;
+    private FoodItemService foodItemService;
 
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService, FoodItemService foodItemService) {
         this.restaurantService = restaurantService;
-
+        this.foodItemService = foodItemService;
     }
 
     @PostMapping(value = "/foodsun/signup/restaurants")
@@ -84,6 +87,48 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrderById(restaurantId, orderId));
     }
 
+    /*
+    * Get all food items by restaurantId
+    * */
+    @GetMapping(value = "/restaurants/{restaurantId}/fooditems")
+    public ResponseEntity<Page<FoodItemDTO>> getFoodItemByRestaurantId(
+                                                                    @PathVariable Long restaurantId,
+                                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                   @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<FoodItemDTO> list = restaurantService.getFoodItemByRestaurantId(restaurantId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    /*
+     * Get food items by fooditemId
+     * */
+    @GetMapping(value = "/restaurants/fooditems/id/{fooditemId}")
+    public ResponseEntity<FoodItemDTO> getFoodItemById(@PathVariable Long fooditemId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findFoodItemById(fooditemId));
+    }
+
+    /*
+     * Get all food items by name
+     * */
+    @GetMapping(value = "/restaurants/fooditems/name/{name}")
+    public ResponseEntity<Page<FoodItemDTO>> getFoodItemByName(
+                                                    @PathVariable String name,
+                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                    @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<FoodItemDTO> list = restaurantService.getFoodItemByName(name, request);
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    /*
+     * Add one food item
+     * */
+    @PostMapping(value = "/restaurants/{restaurantId}/fooditems/add")
+    public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItem(restaurantId, foodItemDTO));
+    }
+
     /**
      * Persists list of food items provided in request body.
      *
@@ -95,6 +140,19 @@ public class RestaurantController {
     public ResponseEntity<RestaurantDTO> addFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<FoodItemDTO> foodItemDTOs) {
         log.debug("Adding food items to restaurants.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItemDTOs));
+    }
+
+    /*
+     * Edit foodItem
+     * */
+    @PutMapping(value = "/restaurants/fooditems/edit/{fooditemId}")
+    public ResponseEntity<FoodItemDTO> editFoodItem(@PathVariable Long fooditemId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.editFoodItem(fooditemId, foodItemDTO));
+    }
+
+    @PutMapping(value = "/restaurants/fooditems/delete/{fooditemId}")
+    public  ResponseEntity<FoodItemDTO> deleteFoodItem(@PathVariable Long fooditemId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.updateStatus(fooditemId));
     }
 
     /**
@@ -131,4 +189,8 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findByEmail(email));
     }
 
+    @PutMapping(value = "restaurants/edit/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> updateProfile(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.update(restaurantDTO, restaurantId));
+    }
 }

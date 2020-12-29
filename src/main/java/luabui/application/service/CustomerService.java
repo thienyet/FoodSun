@@ -29,4 +29,6 @@ public interface CustomerService extends CrudService<CustomerDTO, Long> {
     CustomerDTO findByEmail(String email);
 
     Page<CustomerDTO> getCustomerByName(String name, Pageable pageable);
+
+    CustomerDTO changeStatus(Long customerId);
 }

@@ -62,27 +62,55 @@ public class AdminController {
         return roleService.findAll();
     }
 
-    @PostMapping(value = "/foodsun/signup/admins")
+
+    /*
+    * Create new admin
+    * */
+    @PostMapping(value = "/admins/addnew")
     public ResponseEntity<AdminDTO> saveAdmin(@Valid @RequestBody AdminDTO adminDTO) {
         log.debug("Saving Admin.");
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.save(adminDTO));
     }
 
-    @GetMapping(value = "/admin/profile")
+    /*
+     * Get profile
+     * */
+    @GetMapping(value = "/admins/profile")
     public ResponseEntity<?> getProfile(@RequestParam String email) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findByEmail(email));
     }
 
-    @GetMapping(value = "/admin/restaurants")
+    @PutMapping(value = "admins/edit/{adminId}")
+    public ResponseEntity<AdminDTO> updateAdmin(@Valid @RequestBody AdminDTO adminDTO, @PathVariable Long adminId) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.update(adminDTO, adminId));
+    }
+
+    /*
+     * Get all restauransts
+     * */
+    @GetMapping(value = "/admins/restaurants")
     public ResponseEntity<Page<RestaurantDTO>> getAllRestaurants(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                  @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        log.debug("Getting all Restaurants");
+        log.debug("Getting all Restaurants are active");
         PageRequest request = PageRequest.of(page - 1, size);
         Page<RestaurantDTO> list = restaurantService.findAll(request);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping(value = "/admin/restaurants/createDate/{createDate}")
+    /*
+     * Get restauranst by Id
+     * */
+    @GetMapping(value = "/admins/restaurants/Id/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> getAllRestaurantById(@PathVariable Long restaurantId) {
+        log.debug("Getting Restaurant by Id");
+        RestaurantDTO restaurantDTO = restaurantService.findById(restaurantId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTO);
+    }
+
+    /*
+     * Get all restaurants by create date
+     * */
+    @GetMapping(value = "/admins/restaurants/createDate/{createDate}")
     public ResponseEntity<Page<RestaurantDTO>> getAllRestaurantsByCreateDate(@PathVariable Date createDate,
                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -92,7 +120,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
     }
 
-    @GetMapping(value = "/admin/restaurants/address/{area}")
+    /*
+     * Get all restaurants by address
+     * */
+    @GetMapping(value = "/admins/restaurants/address/{area}")
     public ResponseEntity<?> getAllRestaurantsInArea(@PathVariable String area,
                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -102,7 +133,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
     }
 
-    @GetMapping(value = "/admin/restaurants/name/{name}")
+    /*
+     * Get all restaurants by name
+     * */
+    @GetMapping(value = "/admins/restaurants/name/{name}")
     public ResponseEntity<?> getAllRestaurantsByName(@PathVariable String name,
                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -112,16 +146,44 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
     }
 
-    @GetMapping(value = "/admin/customers")
+    /*
+     * Get all restaurants of category by categoryId
+     * */
+    @GetMapping(value = "admins/restaurants/category/{categoryId}")
+    public ResponseEntity<Page<RestaurantDTO>> getRestaurantByCategory(@PathVariable Long categoryId,
+                                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                       @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<RestaurantDTO> restaurantDTOPage = restaurantService.getRestaurantByCategory(categoryId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOPage);
+    }
+
+    /*
+     * Get all customers
+     * */
+    @GetMapping(value = "/admins/customers")
     public ResponseEntity<Page<CustomerDTO>> getAllCustomers(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        log.debug("Getting all Customers");
+        log.debug("Getting all Customers are active");
         PageRequest request = PageRequest.of(page - 1, size);
         Page<CustomerDTO> list = customerService.findAll(request);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping(value = "/admin/customers/createDate/{createDate}")
+    /*
+     * Get customer by Id
+     * */
+    @GetMapping(value = "/admins/customers/Id/{customerId}")
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long customerId) {
+        log.debug("Getting Customer by Id");
+        CustomerDTO customerDTO = customerService.findById(customerId);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDTO);
+    }
+
+    /*
+     * Get all customers by create date
+     * */
+    @GetMapping(value = "/admins/customers/createDate/{createDate}")
     public ResponseEntity<Page<CustomerDTO>> getAllCustomersByCreateDate(@PathVariable Date createDate,
                                                                              @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                              @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -131,7 +193,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDTOPage);
     }
 
-    @GetMapping(value = "/admin/customers/address/{address}")
+    /*
+     * Get all customers by address
+     * */
+    @GetMapping(value = "/admins/customers/address/{address}")
     public ResponseEntity<Page<CustomerDTO>> getAllCustomersByAddress(@PathVariable String address,
                                                                          @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                          @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -141,7 +206,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDTOPage);
     }
 
-    @GetMapping(value = "/admin/customers/name/{name}")
+    /*
+     * Get all customers by name
+     * */
+    @GetMapping(value = "/admins/customers/name/{name}")
     public ResponseEntity<Page<CustomerDTO>> getAllCustomersByName(@PathVariable String name,
                                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                       @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -151,7 +219,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDTOPage);
     }
 
-    @GetMapping(value = "/admin/deliveryguys/createDate/{createDate}")
+    /*
+     * Get all delivery guys by create date
+     * */
+    @GetMapping(value = "/admins/deliveryguys/createDate/{createDate}")
     public ResponseEntity<Page<DeliveryGuyDTO>> getAllDeliveryGuysByCreateDate(@PathVariable Date createDate,
                                                                                @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                                @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -161,7 +232,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyDTOPage);
     }
 
-    @GetMapping(value = "/admin/deliveryguys/address/{address}")
+    /*
+     * Get all delivery guys by address
+     * */
+    @GetMapping(value = "/admins/deliveryguys/address/{address}")
     public ResponseEntity<Page<DeliveryGuyDTO>> getAllDeliveryGuysByAddress(@PathVariable String address,
                                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                       @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -171,7 +245,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyDTOPage);
     }
 
-    @GetMapping(value = "/admin/deliveryguys")
+    /*
+     * Get all delivery guys
+     * */
+    @GetMapping(value = "/admins/deliveryguys")
     public ResponseEntity<Page<DeliveryGuyDTO>> getAllDeliveryGuys(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                             @RequestParam(value = "size", defaultValue = "3") Integer size) {
         log.debug("Getting all DeliveryGuys");
@@ -180,7 +257,20 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyDTOPage);
     }
 
-    @GetMapping(value = "/admin/deliveryguys/name/{name}")
+    /*
+     * Get delivery guy by Id
+     * */
+    @GetMapping(value = "/admins/deliveryguys/Id/{deliveryguyId}")
+    public ResponseEntity<DeliveryGuyDTO> getDeliveryGuyrById(@PathVariable Long deliveryguyId) {
+        log.debug("Getting Delivery Guy by Id");
+        DeliveryGuyDTO deliveryGuyDTO = deliveryGuyService.findById(deliveryguyId);
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyDTO);
+    }
+
+    /*
+     * Get all delivery guys by name
+     * */
+    @GetMapping(value = "/admins/deliveryguys/name/{name}")
     public ResponseEntity<Page<DeliveryGuyDTO>> getAllDeliveryGuysByName(@PathVariable String name,
                                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                    @RequestParam(value = "size", defaultValue = "3") Integer size) {
@@ -190,32 +280,108 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyDTOPage);
     }
 
-    @GetMapping(value = "/admin/categories")
+    /*
+     * Get all categories
+     * */
+    @GetMapping(value = "/admins/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategory() {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.findAll());
     }
 
-    @GetMapping(value = "admin/categories/{categoryId}/restaurants")
-    public ResponseEntity<Page<RestaurantDTO>> getRestaurantByCategory(@PathVariable Long categoryId,
-                                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                                     @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        PageRequest request = PageRequest.of(page - 1, size);
-        Page<RestaurantDTO> restaurantDTOPage = restaurantService.getRestaurantByCategory(categoryId, request);
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOPage);
-    }
-
-    @GetMapping(value = "/admin/categories/{categoryId}")
+    /*
+     * Get category by categoryId
+     * */
+    @GetMapping(value = "/admins/categories/Id/{categoryId}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.findById(categoryId));
     }
 
-    @PostMapping(value = "/admin/categories/add")
+    /*
+     * Get category by categoryId
+     * */
+    @GetMapping(value = "/admins/categories/name/{name}")
+    public ResponseEntity<CategoryDTO> getCategoryByName(@PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findByName(name));
+    }
+
+    /*
+     * Create new category
+     * */
+    @PostMapping(value = "/admins/categories/add")
     public ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(categoryDTO));
     }
 
-    @PutMapping(value = "/admin/categories/edit/{categoryId}")
+    /*
+     * Edit category
+     * */
+    @PutMapping(value = "/admins/categories/edit/{categoryId}")
     public ResponseEntity<CategoryDTO> editCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.update(categoryDTO, categoryId));
+    }
+
+    /*
+     * Delete category
+     * */
+    @PutMapping(value = "/admins/categories/delete/{categoryId}")
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.updateDelete(categoryId));
+    }
+
+    /*
+    * Get all admins
+    * */
+    @GetMapping(value = "/admins/admins")
+    public ResponseEntity<List<AdminDTO>> getAllAdmins() {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findAll());
+    }
+
+    /*
+     * Get admin by Id
+     * */
+    @GetMapping(value = "/admins/admins/Id/{adminId}")
+    public ResponseEntity<AdminDTO> getAdminById(@PathVariable Long adminId) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findById(adminId));
+    }
+
+    /*
+     * Get all admins by name
+     * */
+    @GetMapping(value = "/admins/admins/name/{name}")
+    public ResponseEntity<List<AdminDTO>> getAllAdmin(@PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findByName(name));
+    }
+
+    /*
+    * change status of admin (block or unblock)
+    * */
+    @PutMapping(value = "/admins/admins/changeStatus/{adminId}")
+    public ResponseEntity<AdminDTO> blockAdmin(@PathVariable Long adminId) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.changeStatus(adminId));
+    }
+
+
+    /*
+     * change status of restaurant (block or unblock)
+     * */
+    @PutMapping(value = "/admins/restaurants/changeStatus/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> blockRestaurant(@PathVariable Long restaurantId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.changeStatus(restaurantId));
+    }
+
+    /*
+     * change status of customer (block or unblock)
+     * */
+    @PutMapping(value = "/admins/customers/changeStatus/{customerId}")
+    public ResponseEntity<CustomerDTO> blockCustomer(@PathVariable Long customerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.changeStatus(customerId));
+    }
+
+    /*
+     * change status of delivery (block or unblock)
+     * */
+    @PutMapping(value = "/admins/deliveryguys/changeStatus/{deliveryguyId}")
+    public ResponseEntity<DeliveryGuyDTO> blockDeliveryGuy(@PathVariable Long deliveryguyId) {
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.changeStatus(deliveryguyId));
     }
 }

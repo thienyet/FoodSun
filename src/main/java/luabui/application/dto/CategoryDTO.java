@@ -18,5 +18,7 @@ public class CategoryDTO extends BaseEntityDTO{
 
     private String description;
 
+    private Boolean isDeleted;
+
     private Set<Long> restaurantIds = new HashSet<>();
 }
