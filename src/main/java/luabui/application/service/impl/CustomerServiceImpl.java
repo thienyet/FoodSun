@@ -181,6 +181,20 @@ public class CustomerServiceImpl implements CustomerService {
         return MapperUtil.toCustomerDTO(customer);
     }
 
+    @Override
+    public Page<OrderDTO> getOrdersByCustomerId(Long customerId, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByCustomerId(customerId, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByCustomerIdAndDate(Long customerId, Date date, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByCustomerIdAndDate(customerId, date, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
+    }
+
     private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }

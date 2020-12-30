@@ -12,6 +12,21 @@ import java.sql.Date;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-//    @Query("select order from Order order where  order.restaurant.id = :restaurantId and order.timestamp = :date")
-//    Page<Order> getOrderOfResInOneDat(@Param("restaurantId")Long restaurantId, @Param("date") Date date, Pageable pageable);
+    @Query("select od from Order od where od.restaurant.id = :restaurant")
+    Page<Order> findByRestaurantId(@Param("restaurant")Long restaurantId, Pageable pageable);
+
+    @Query("select od from Order od where od.restaurant.id = :restaurant and Date(od.timestamp) = :date")
+    Page<Order> findByRestaurantIdAndDate(@Param("restaurant") Long restaurantId, @Param("date") Date date, Pageable pageable);
+
+    @Query("select od from Order od where od.customer.id = :customer")
+    Page<Order> findByCustomerId(@Param("customer")Long customerId, Pageable pageable);
+
+    @Query("select od from Order od where od.customer.id = :customer and Date(od.timestamp) = :date")
+    Page<Order> findByCustomerIdAndDate(@Param("customer") Long customerId, @Param("date") Date date, Pageable pageable);
+
+    @Query("select od from Order od where od.deliveryGuy.id = :delivery")
+    Page<Order> findByDeliveryGuyId(@Param("delivery")Long deliveryId, Pageable pageable);
+
+    @Query("select od from Order od where od.deliveryGuy.id = :delivery and Date(od.timestamp) = :date")
+    Page<Order> findByDeliveryGuyIdAndDate(@Param("delivery") Long deliveryId, @Param("date") Date date, Pageable pageable);
 }

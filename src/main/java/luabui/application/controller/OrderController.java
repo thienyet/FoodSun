@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -41,5 +38,11 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
         log.debug("Creating new Order.");
         return ResponseEntity.status(HttpStatus.OK).body(orderService.createOrder(orderDTO));
+    }
+
+    @PostMapping("/customers/{customerId}/orders")
+    public ResponseEntity<OrderDTO> createOrder2(@PathVariable Long customerId,  @Valid @RequestBody OrderDTO orderDTO) {
+        log.debug("Creating new Order.");
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.createOrder2(customerId, orderDTO));
     }
 }

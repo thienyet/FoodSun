@@ -24,4 +24,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query("select cus from Customer cus where cus.name like %:name%")
     Page<Customer> getCustomersByName(@Param("name")String name, Pageable pageable);
+
 }

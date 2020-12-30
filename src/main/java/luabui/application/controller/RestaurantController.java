@@ -32,10 +32,24 @@ public class RestaurantController {
         this.foodItemService = foodItemService;
     }
 
+    //Management Account
+
     @PostMapping(value = "/foodsun/signup/restaurants")
     public ResponseEntity<RestaurantDTO> saveRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO) {
         log.debug("Saving Restaurant.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantDTO));
+    }
+
+
+    @GetMapping(value = "/restaurants/profile")
+    public ResponseEntity<RestaurantDTO> getProfile(@RequestParam String email) {
+        log.debug("Getting Restaurant by id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findByEmail(email));
+    }
+
+    @PutMapping(value = "restaurants/edit/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> updateProfile(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantId) {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.update(restaurantDTO, restaurantId));
     }
 
     /**
@@ -62,31 +76,7 @@ public class RestaurantController {
 //        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantFoodItems(restaurantId));
 //    }
 
-    /**
-     * Returns list of orders taken by restaurant.
-     *
-     * @param restaurantId
-     * @return
-     */
-    @GetMapping(value = "/restaurants/{restaurantId}/orders")
-    public ResponseEntity<List<OrderDTO>> getRestaurantOrders(@PathVariable Long restaurantId) {
-        log.debug("Getting all Orders using restaurantId.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrders(restaurantId));
-    }
-
-    /**
-     * Return a single order taken by restaurant.
-     *
-     * @param restaurantId
-     * @param orderId
-     * @return
-     */
-    @GetMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> getRestaurantOrderById(@PathVariable Long restaurantId, @PathVariable Long orderId) {
-        log.debug("Getting Restaurant Order By Restaurant Id.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrderById(restaurantId, orderId));
-    }
-
+// Food Item Management
     /*
     * Get all food items by restaurantId
     * */
@@ -150,9 +140,63 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.editFoodItem(fooditemId, foodItemDTO));
     }
 
+    /*
+     * delete foodItem
+     * */
     @PutMapping(value = "/restaurants/fooditems/delete/{fooditemId}")
     public  ResponseEntity<FoodItemDTO> deleteFoodItem(@PathVariable Long fooditemId) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.updateStatus(fooditemId));
+    }
+
+    @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
+    public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<Long> foodItemIds) {
+        log.debug("Removing food items from restaurants");
+        /**
+         * Delete food items when provided with food item ids.
+         *
+         * @param restaurantId
+         * @param foodItemIds
+         * @return
+         */ restaurantService.removeFoodItems(restaurantId, foodItemIds);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Returns page of orders taken by restaurant.
+     *
+     * @param restaurantId
+     * @return
+     */
+    @GetMapping(value = "/restaurants/{restaurantId}/orders")
+    public ResponseEntity<Page<OrderDTO>> getOrdersByRestaurantId(@PathVariable Long restaurantId, @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                              @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        log.debug("Getting all Orders using restaurantId.");
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<OrderDTO> list = restaurantService.getOrdersByRestaurantId(restaurantId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    @GetMapping(value = "/restaurants/{restaurantId}/orders/date/{date}")
+    public ResponseEntity<Page<OrderDTO>> getOrdersByRestaurantIdAndDate(@PathVariable Long restaurantId, @PathVariable Date date,
+                                                                         @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                        @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        log.debug("Getting all Orders using restaurantId and Date.");
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<OrderDTO> list = restaurantService.getOrdersByRestaurantIdAndDate(restaurantId, date, request);
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    /**
+     * Return a single order taken by restaurant.
+     *
+     * @param restaurantId
+     * @param orderId
+     * @return
+     */
+    @GetMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
+    public ResponseEntity<OrderDTO> getRestaurantOrderById(@PathVariable Long restaurantId, @PathVariable Long orderId) {
+        log.debug("Getting Restaurant Order By Restaurant Id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrderById(restaurantId, orderId));
     }
 
     /**
@@ -170,27 +214,4 @@ public class RestaurantController {
     }
 
 
-    @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<Long> foodItemIds) {
-        log.debug("Removing food items from restaurants");
-        /**
-         * Delete food items when provided with food item ids.
-         *
-         * @param restaurantId
-         * @param foodItemIds
-         * @return
-         */ restaurantService.removeFoodItems(restaurantId, foodItemIds);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/restaurants/profile")
-    public ResponseEntity<RestaurantDTO> getProfile(@RequestParam String email) {
-        log.debug("Getting Restaurant by id.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findByEmail(email));
-    }
-
-    @PutMapping(value = "restaurants/edit/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> updateProfile(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantId) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.update(restaurantDTO, restaurantId));
-    }
 }

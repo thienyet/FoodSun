@@ -78,6 +78,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setAddress(deliveryGuyDTO.getAddress());
 
         deliveryGuyRepository.saveAndFlush(deliveryGuy);
 
@@ -187,6 +188,20 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         deliveryGuy.setIsBusy(!deliveryGuy.getIsBusy());
         deliveryGuyRepository.save(deliveryGuy);
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByDeliveryId(Long deliveryGuyId, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByDeliveryGuyId(deliveryGuyId, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByDeliveryIdAndDate(Long deliveryGuyId, Date date, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByDeliveryGuyIdAndDate(deliveryGuyId, date, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
     }
 
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {

@@ -10,5 +10,7 @@ import java.sql.Date;
 public interface OrderService extends CrudService<OrderDTO, Long> {
     OrderDTO createOrder(OrderDTO orderDTO);
 
+    OrderDTO createOrder2(Long customerId, OrderDTO orderDTO);
+
 //    Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable);
 }

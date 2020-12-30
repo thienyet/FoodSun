@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Date;
 import java.util.List;
 
 @Slf4j
@@ -66,11 +67,27 @@ public class CustomerController {
      * @return
      */
     @GetMapping(value = "/customers/{customerId}/orders")
-    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@PathVariable Long customerId) {
+    public ResponseEntity<Page<OrderDTO>> getCustomerOrders(@PathVariable Long customerId,
+                                                            @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
         log.debug("Getting Customer Orders.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerOrders(customerId));
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<OrderDTO> orderDTOPage = customerService.getOrdersByCustomerId(customerId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(orderDTOPage);
     }
 
+    /*
+    * Get orders by customerId and date
+    * */
+    @GetMapping(value = "/customers/{customerId}/orders/date/{date}")
+    public ResponseEntity<Page<OrderDTO>> getOrdersByCusIdAndDate(@PathVariable Long customerId, @PathVariable Date date,
+                                                            @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        log.debug("Getting Customer Orders.");
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<OrderDTO> orderDTOPage = customerService.getOrdersByCustomerIdAndDate(customerId, date, request);
+        return ResponseEntity.status(HttpStatus.OK).body(orderDTOPage);
+    }
 
     /**
      * Returns order detail belonging to passed customerId and orderId.
@@ -178,9 +195,9 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
     }
 
-    @PutMapping(value = "/customers/profile/edit")
+    @PutMapping(value = "/customers/edit/{customerId}")
     public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
         log.debug("Updating Customer.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.update(customerDTO, customerId));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(customerDTO, customerId));
     }
 }

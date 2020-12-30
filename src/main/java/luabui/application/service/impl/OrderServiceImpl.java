@@ -116,6 +116,45 @@ public class OrderServiceImpl implements OrderService {
         return MapperUtil.toOrderDTO(order);
     }
 
+    @Override
+    public OrderDTO createOrder2(Long customerId, OrderDTO orderDTO) {
+        Long restaurantId = orderDTO.getRestaurantId();
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+
+        Order order = MapperUtil.toOrder(orderDTO);
+
+        order.setCustomer(customer);
+        order.setRestaurant(restaurant);
+        order.setDeliveryGuy(getDeliveryGuy());
+
+        order.setDeliveryAddress(orderDTO.getDeliveryAddress());
+
+        List<OrderFoodItem> orderFoodItems = orderDTO.getOrderFoodItemDTOs().stream()
+                .map(orderFoodItemDTO -> toOrderFoodItem(orderFoodItemDTO)).collect(Collectors.toList());
+
+        Double totalPrice = 0.0;
+
+        for (OrderFoodItem orderFoodItem : orderFoodItems) {
+            totalPrice += orderFoodItem.getPrice()*orderFoodItem.getQuantity();
+        }
+
+//        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderDTO.getTotalPrice())) != 0) {
+//            throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderDTO.getTotalPrice());
+//        }
+
+        order.setTotalPrice(totalPrice);
+        order.setOrderStatus(OrderStatus.APPROVED);
+        orderRepository.save(order);
+        orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
+        orderFoodItemRepository.saveAll(orderFoodItems);
+        return MapperUtil.toOrderDTO(order);
+    }
+
 //    @Override
 //    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
 //        Page<Order> orderPage = orderRepository.getOrderOfResInOneDat(restaurantId, date, pageable);

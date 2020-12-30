@@ -31,4 +31,8 @@ public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
      DeliveryGuyDTO changeStatus(Long deliveryguyId);
 
      DeliveryGuyDTO changeBusy(Long deliveryguyId);
+
+     Page<OrderDTO> getOrdersByDeliveryId(Long deliveryGuyId, Pageable pageable);
+
+     Page<OrderDTO> getOrdersByDeliveryIdAndDate(Long deliveryGuyId, Date date, Pageable pageable);
 }

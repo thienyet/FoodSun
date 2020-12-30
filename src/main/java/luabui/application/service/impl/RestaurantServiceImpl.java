@@ -208,6 +208,21 @@ public class RestaurantServiceImpl implements RestaurantService {
         return MapperUtil.toFoodItemDTO(foodItem);
     }
 
+    @Override
+    public Page<OrderDTO> getOrdersByRestaurantId(Long restaurantId, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByRestaurantId(restaurantId, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
+    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByRestaurantIdAndDate(Long restaurantId, Date date, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findByRestaurantIdAndDate(restaurantId, date, pageable);
+        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
+        return orderDTOPage;
+    }
+
+
 //    @Override
 //    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
 //        Page<Order> orderPage = restaurantRepository.getOrderOfResInOneDat(restaurantId, (Date) date, pageable);
