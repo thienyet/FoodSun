@@ -1,13 +1,17 @@
 package luabui.application.repository;
 
 import luabui.application.model.Order;
+import luabui.application.model.Restaurant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.Date;
+import java.util.List;
 
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -29,4 +33,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select od from Order od where od.deliveryGuy.id = :delivery and Date(od.timestamp) = :date")
     Page<Order> findByDeliveryGuyIdAndDate(@Param("delivery") Long deliveryId, @Param("date") Date date, Pageable pageable);
+
+    @Query("select od from Order od where od.orderStatus = 'delivered' and month(od.timestamp) = :month")
+    List<Order> getRevenueAdmin(@Param("month") Integer month);
+
+    @Query("select od from Order od where od.orderStatus = 'delivered' and od.restaurant.id = :restaurant and month(od.timestamp) = :month")
+    List<Order> getRevenueRestaurant(@Param("restaurant") Long restaurantId, @Param("month") Integer month);
+
+    @Query("select od from Order od where od.orderStatus = 'delivered' and od.deliveryGuy.id = :delivery and month(od.timestamp) = :month")
+    List<Order> getRevenueDelivery(@Param("delivery") Long deliveryId, @Param("month") Integer month);
+
+    @Query(value = "select od.restaurant.id, count(od.restaurant.id) as countOrder from Order od group by od.restaurant.id order by countOrder desc")
+    List<?> getMostRestaurant(@Param("month") Integer month, Pageable pageable);
 }
+//value = "select od.restaurant.id, count(od.restaurant.id) as countOrder from Order od group by od.restaurant.id order by countOrder desc"

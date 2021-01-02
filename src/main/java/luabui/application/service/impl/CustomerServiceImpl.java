@@ -126,7 +126,7 @@ public class CustomerServiceImpl implements CustomerService {
 //            throw new PaymentModeException("Payment mode cannot be changed now.");
 //        }
 
-        if (!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
+        if (!order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("cancelled")) {
             log.debug("Successfully changed order status.");
             order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
         } else {

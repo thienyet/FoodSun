@@ -1,12 +1,11 @@
 package luabui.application.service.impl;
 
+import lombok.var;
 import luabui.application.constants.OrderStatus;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderFoodItemDTO;
-import luabui.application.exception.CustomerNotFoundException;
-import luabui.application.exception.FoodItemNotFoundException;
-import luabui.application.exception.PriceMismatchException;
-import luabui.application.exception.RestaurantNotFoundException;
+import luabui.application.dto.RestaurantDTO;
+import luabui.application.exception.*;
 import luabui.application.model.*;
 import luabui.application.repository.*;
 import luabui.application.service.OrderService;
@@ -14,12 +13,15 @@ import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -142,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
         for (OrderFoodItem orderFoodItem : orderFoodItems) {
             totalPrice += orderFoodItem.getPrice()*orderFoodItem.getQuantity();
         }
-
+        totalPrice += 25.0;
 //        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderDTO.getTotalPrice())) != 0) {
 //            throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderDTO.getTotalPrice());
 //        }
@@ -153,6 +155,47 @@ public class OrderServiceImpl implements OrderService {
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
         orderFoodItemRepository.saveAll(orderFoodItems);
         return MapperUtil.toOrderDTO(order);
+    }
+
+    @Override
+    public Double getRevenueAdmin(Integer month) {
+        List<Order> orderList = orderRepository.getRevenueAdmin(month);
+        Double revenue = 0.0;
+        for(Order od : orderList) {
+            revenue += od.getTotalPrice();
+        }
+        revenue = revenue*0.2;
+        return revenue;
+    }
+
+    @Override
+    public RestaurantDTO getMostRestaurant(Integer month) {
+//        var result = new HashMap<Long, Integer>();
+//        result = (HashMap<Long, Integer>) orderRepository.getMostRestaurant(month, PageRequest.of(0, 1));
+//
+//        Integer num = result.get(1);
+//        Long restaurantId = result.get(num);
+//        Restaurant restaurant = restaurantRepository.findById((Long) restaurantId).orElseThrow(() -> new NotFoundException("Not found "));
+        return null;
+    }
+
+    @Override
+    public Double getRevenueRestaurant(Long restaurantId, Integer month) {
+        List<Order> orderList = orderRepository.getRevenueRestaurant(restaurantId, month);
+        Double revenue = 0.0;
+        for(Order od : orderList) {
+            revenue += od.getTotalPrice() - 25.0;
+        }
+        revenue = revenue*0.8;
+        return revenue;
+    }
+
+    @Override
+    public Double getRevenueDelivery(Long deliveryguyId, Integer month) {
+        List<Order> orderList = orderRepository.getRevenueDelivery(deliveryguyId, month);
+        Double revenue = 0.0;
+        revenue = 20.0*orderList.size();
+        return revenue;
     }
 
 //    @Override

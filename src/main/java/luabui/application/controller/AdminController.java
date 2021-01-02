@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.List;
@@ -383,5 +384,15 @@ public class AdminController {
     @PutMapping(value = "/admins/deliveryguys/changeStatus/{deliveryguyId}")
     public ResponseEntity<DeliveryGuyDTO> blockDeliveryGuy(@PathVariable Long deliveryguyId) {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.changeStatus(deliveryguyId));
+    }
+
+    @GetMapping(value = "/admins/revenue/{month}")
+    public ResponseEntity<Double> getRevenue(@PathVariable Integer month) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getRevenueAdmin(month));
+    }
+
+    @GetMapping(value = "/admins/statistic/restaurants/{month}")
+    public ResponseEntity<RestaurantDTO> getMostRestaurant(@PathVariable Integer month) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getMostRestaurant(month));
     }
 }

@@ -128,12 +128,24 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
 //            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
 //        }
 
-        if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
+//        if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
+//            order.setOrderStatus(OrderStatus.DELIVERED);
+//            deliveryGuy.setIsBusy(false);
+//        } else {
+//            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
+//        }preparingpicked updelivered
+
+        if (order.getOrderStatus().getDescription().equals("preparing") && orderStatus.getDescription().equals("picked up")) {
+            order.setOrderStatus(OrderStatus.PICKED_UP);
+            deliveryGuy.setIsBusy(true);
+        } else if(order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
             order.setOrderStatus(OrderStatus.DELIVERED);
             deliveryGuy.setIsBusy(false);
-        } else {
+        }
+        else {
             throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
         }
+        deliveryGuyRepository.save(deliveryGuy);
         return MapperUtil.toOrderDTO(orderRepository.save(order));
     }
 

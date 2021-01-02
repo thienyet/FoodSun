@@ -2,6 +2,7 @@ package luabui.application.controller;
 
 import luabui.application.dto.*;
 import luabui.application.service.FoodItemService;
+import luabui.application.service.OrderService;
 import luabui.application.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ import java.util.List;
 public class RestaurantController {
     private RestaurantService restaurantService;
     private FoodItemService foodItemService;
+    private OrderService orderService;
 
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, FoodItemService foodItemService) {
+    public RestaurantController(RestaurantService restaurantService, FoodItemService foodItemService, OrderService orderService) {
         this.restaurantService = restaurantService;
         this.foodItemService = foodItemService;
+        this.orderService = orderService;
     }
 
     //Management Account
@@ -213,5 +216,8 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }
 
-
+    @GetMapping(value = "/restaurants/{restaurantId}/revenue/{month}")
+    public ResponseEntity<Double> getRevenue(@PathVariable Long restaurantId, @PathVariable Integer month) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getRevenueRestaurant(restaurantId, month));
+    }
 }

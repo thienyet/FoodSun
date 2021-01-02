@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("select cate from Category cate where cate.name like %:name%")
+    @Query("select cate from Category cate where cate.name like %:name% and cate.isDeleted = false ")
     Category findByName(@Param("name")String name);
 }

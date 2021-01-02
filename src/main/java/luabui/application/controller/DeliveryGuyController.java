@@ -6,6 +6,7 @@ import luabui.application.dto.OrderModificationDTO;
 import luabui.application.dto.RestaurantDTO;
 import luabui.application.service.DeliveryGuyService;
 import lombok.extern.slf4j.Slf4j;
+import luabui.application.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +26,12 @@ import java.util.List;
  */
 public class DeliveryGuyController {
     private DeliveryGuyService deliveryGuyService;
+    private OrderService orderService;
 
     @Autowired
-    public DeliveryGuyController(DeliveryGuyService deliveryGuyService) {
+    public DeliveryGuyController(DeliveryGuyService deliveryGuyService, OrderService orderService) {
         this.deliveryGuyService = deliveryGuyService;
+        this.orderService = orderService;
     }
 
     /**
@@ -150,5 +153,8 @@ public class DeliveryGuyController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping(value = "/deliveryguys/{deliveryGuyId}/revenue/{month}")
+    public ResponseEntity<Double> getRevenue(@PathVariable Long deliveryGuyId, @PathVariable Integer month) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getRevenueDelivery(deliveryGuyId, month));
+    }
 }
