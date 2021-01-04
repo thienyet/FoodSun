@@ -1,6 +1,7 @@
 package luabui.application.controller;
 
 import luabui.application.dto.*;
+import luabui.application.service.CloudinaryService;
 import luabui.application.service.FoodItemService;
 import luabui.application.service.OrderService;
 import luabui.application.service.RestaurantService;
@@ -11,8 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -26,13 +31,15 @@ public class RestaurantController {
     private RestaurantService restaurantService;
     private FoodItemService foodItemService;
     private OrderService orderService;
+    private CloudinaryService cloudinaryService;
 
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, FoodItemService foodItemService, OrderService orderService) {
+    public RestaurantController(RestaurantService restaurantService, FoodItemService foodItemService, OrderService orderService, CloudinaryService cloudinaryService) {
         this.restaurantService = restaurantService;
         this.foodItemService = foodItemService;
         this.orderService = orderService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     //Management Account
@@ -119,6 +126,8 @@ public class RestaurantController {
      * */
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems/add")
     public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
+//        File file = new  File
+//        cloudinaryService.uploadFile(foodItemDTO.getImage());
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItem(restaurantId, foodItemDTO));
     }
 
@@ -147,8 +156,9 @@ public class RestaurantController {
      * delete foodItem
      * */
     @PutMapping(value = "/restaurants/fooditems/delete/{fooditemId}")
-    public  ResponseEntity<FoodItemDTO> deleteFoodItem(@PathVariable Long fooditemId) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.updateStatus(fooditemId));
+    public  ResponseEntity<Void> deleteFoodItem(@PathVariable Long fooditemId) {
+        restaurantService.updateStatus(fooditemId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
@@ -219,5 +229,10 @@ public class RestaurantController {
     @GetMapping(value = "/restaurants/{restaurantId}/revenue/{month}")
     public ResponseEntity<Double> getRevenue(@PathVariable Long restaurantId, @PathVariable Integer month) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getRevenueRestaurant(restaurantId, month));
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(cloudinaryService.uploadFile(file));
     }
 }

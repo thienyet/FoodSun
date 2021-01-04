@@ -1,7 +1,6 @@
 package luabui.application.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -325,8 +325,9 @@ public class AdminController {
      * Delete category
      * */
     @PutMapping(value = "/admins/categories/delete/{categoryId}")
-    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.updateDelete(categoryId));
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.updateDelete(categoryId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /*
