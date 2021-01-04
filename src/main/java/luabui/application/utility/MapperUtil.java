@@ -72,6 +72,7 @@ public class MapperUtil {
         FoodItemDTO foodItemDTO = new FoodItemDTO();
         foodItemDTO.setId(foodItem.getId());
         foodItemDTO.setName(foodItem.getName());
+        foodItemDTO.setImage(foodItem.getImage());
         foodItemDTO.setPrice(foodItem.getPrice());
         foodItemDTO.setRestaurantId(foodItem.getRestaurant().getId());
         foodItemDTO.setIsDeleted(foodItem.getIsDeleted());

@@ -1,5 +1,6 @@
 package luabui.application.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import luabui.application.dto.*;
 import luabui.application.service.CloudinaryService;
 import luabui.application.service.FoodItemService;
@@ -125,9 +126,15 @@ public class RestaurantController {
      * Add one food item
      * */
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems/add")
-    public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
-//        File file = new  File
-//        cloudinaryService.uploadFile(foodItemDTO.getImage());
+    public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @RequestParam("json") String jsonFile, @RequestParam("file") MultipartFile file) {
+        String nameFile = cloudinaryService.uploadFile(file);
+        FoodItemDTO foodItemDTO = null;
+        try {
+            foodItemDTO = new ObjectMapper().readValue(jsonFile, FoodItemDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        foodItemDTO.setImage(nameFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItem(restaurantId, foodItemDTO));
     }
 
