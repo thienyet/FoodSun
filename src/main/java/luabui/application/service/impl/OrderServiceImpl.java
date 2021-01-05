@@ -1,10 +1,8 @@
 package luabui.application.service.impl;
 
-import lombok.var;
 import luabui.application.constants.OrderStatus;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderFoodItemDTO;
-import luabui.application.dto.RestaurantDTO;
 import luabui.application.exception.*;
 import luabui.application.model.*;
 import luabui.application.repository.*;
@@ -12,16 +10,10 @@ import luabui.application.service.OrderService;
 import luabui.application.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -169,17 +161,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public RestaurantDTO getMostRestaurant(Integer month) {
-//        var result = new HashMap<Long, Integer>();
-//        result = (HashMap<Long, Integer>) orderRepository.getMostRestaurant(month, PageRequest.of(0, 1));
-//
-//        Integer num = result.get(1);
-//        Long restaurantId = result.get(num);
-//        Restaurant restaurant = restaurantRepository.findById((Long) restaurantId).orElseThrow(() -> new NotFoundException("Not found "));
-        return null;
-    }
-
-    @Override
     public Double getRevenueRestaurant(Long restaurantId, Integer month) {
         List<Order> orderList = orderRepository.getRevenueRestaurant(restaurantId, month);
         Double revenue = 0.0;
@@ -198,12 +179,6 @@ public class OrderServiceImpl implements OrderService {
         return revenue;
     }
 
-//    @Override
-//    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
-//        Page<Order> orderPage = orderRepository.getOrderOfResInOneDat(restaurantId, date, pageable);
-//        Page<OrderDTO> orderDTOPage = orderPage.map(MapperUtil :: toOrderDTO);
-//        return orderDTOPage;
-//    }
 
     private OrderFoodItem toOrderFoodItem(OrderFoodItemDTO orderFoodItemDTO) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");

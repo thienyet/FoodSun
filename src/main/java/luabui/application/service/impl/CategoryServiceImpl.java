@@ -72,6 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
         return MapperUtil.toCategoryDTO(category);
     }
 
+    @Override
+    public List<CategoryDTO> getAllExisted() {
+        List<Category> categoryList = categoryRepository.findAllExisted();
+        return categoryList.stream().map(MapperUtil :: toCategoryDTO).collect(Collectors.toList());
+    }
+
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(categoryId + " not found"));
     }
