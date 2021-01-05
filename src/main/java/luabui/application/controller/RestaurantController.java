@@ -126,7 +126,7 @@ public class RestaurantController {
      * Add one food item
      * */
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems/add")
-    public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @RequestParam("json") String jsonFile, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<FoodItemDTO> addFoodItem(@PathVariable Long restaurantId, @RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file) {
         String nameFile = cloudinaryService.uploadFile(file);
         FoodItemDTO foodItemDTO = null;
         try {
