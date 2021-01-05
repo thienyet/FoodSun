@@ -9,7 +9,7 @@ public interface CategoryService extends CrudService<CategoryDTO, Long> {
 
     CategoryDTO update(CategoryDTO categoryDTO, Long categoryId);
 
-    CategoryDTO findByName(String name);
+    List<CategoryDTO> findByName(String name);
 
     CategoryDTO updateDelete(Long categoryId);
 

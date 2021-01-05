@@ -59,9 +59,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO findByName(String name) {
-        Category category = categoryRepository.findByName(name);
-        return MapperUtil.toCategoryDTO(category);
+    public List<CategoryDTO> findByName(String name) {
+        List<Category> categoryList = categoryRepository.findByName(name);
+        return categoryList.stream().map(MapperUtil :: toCategoryDTO).collect(Collectors.toList());
     }
 
     @Override
