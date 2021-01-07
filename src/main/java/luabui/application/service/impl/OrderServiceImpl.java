@@ -201,7 +201,7 @@ public class OrderServiceImpl implements OrderService {
         // Should choose delivery who near restaurant or destination
         log.debug("Getting a delivery guy.");
 //        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findAll();
-        List<DeliveryGuy> deliveryGuysNotBusy = deliveryGuyRepository.findAllNotBusy(false);
+        List<DeliveryGuy> deliveryGuysNotBusy = deliveryGuyRepository.findAllNotBusy();
         Random random = new Random();
         DeliveryGuy deliveryGuy = deliveryGuysNotBusy.get(random.nextInt(deliveryGuysNotBusy.size()));
         deliveryGuy.setIsBusy(true);

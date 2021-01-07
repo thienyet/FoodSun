@@ -42,4 +42,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 //    @Query(value = "select od.restaurant.id, count(od.restaurant.id) as countOrder from Order od group by od.restaurant.id order by countOrder desc")
 //    List<ModelStatistic> getMostRestaurant(@Param("month") Integer month, Pageable pageable);
+//    @Query(value = "select new StatisticDTO (odfi.foodItem.id as id, count(odfi.foodItem.id) as number) from OrderFoodItem as odfi, Order as od " +
+//            "where odfi.order.id = od.id and od.restaurant.id = :restaurant and month(od.timestamp) = :month group by odfi.foodItem.id order by number desc")
+//    Page<StatisticDTO> getMostFood(@Param("month") Integer month, @Param("restaurant") Long restaurantId, Pageable pageable);
 }

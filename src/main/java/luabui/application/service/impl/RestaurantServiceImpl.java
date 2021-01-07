@@ -1,10 +1,7 @@
 package luabui.application.service.impl;
 
 import luabui.application.constants.OrderStatus;
-import luabui.application.dto.FoodItemDTO;
-import luabui.application.dto.OrderDTO;
-import luabui.application.dto.OrderModificationDTO;
-import luabui.application.dto.RestaurantDTO;
+import luabui.application.dto.*;
 import luabui.application.exception.NotFoundException;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
@@ -32,15 +29,20 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RoleRepository roleRepository;
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
+    private DeliveryGuyRepository deliveryGuyRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository, OrderRepository orderRepository, RoleRepository roleRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository,
+                                 OrderRepository orderRepository, RoleRepository roleRepository,
+                                 UserRepository userRepository, CategoryRepository categoryRepository,
+                                 DeliveryGuyRepository deliveryGuyRepository) {
         this.restaurantRepository = restaurantRepository;
         this.foodItemRepository = foodItemRepository;
         this.orderRepository = orderRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.categoryRepository =  categoryRepository;
+        this.deliveryGuyRepository = deliveryGuyRepository;
     }
 
     @Override
@@ -277,6 +279,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         if (order.getOrderStatus().getDescription().equals("approved")) {
             order.setOrderStatus(orderStatus);
+            if(orderStatus.equals("cancelled")) {
+                DeliveryGuy deliveryGuy = deliveryGuyRepository.findById(order.getDeliveryGuy().getId()).orElseThrow(() -> new NotFoundException("Not found"));
+                deliveryGuy.setIsBusy(false);
+                deliveryGuyRepository.save(deliveryGuy);
+            }
         } else {
             throw new OrderStatusException("Restaurant cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
         }

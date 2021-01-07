@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,8 +47,16 @@ public class RestaurantController {
     //Management Account
 
     @PostMapping(value = "/foodsun/signup/restaurants")
-    public ResponseEntity<RestaurantDTO> saveRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO) {
+    public ResponseEntity<RestaurantDTO> saveRestaurant(@RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file) {
         log.debug("Saving Restaurant.");
+        String nameFile = cloudinaryService.uploadFile(file);
+        RestaurantDTO restaurantDTO = null;
+        try {
+            restaurantDTO = new ObjectMapper().readValue(jsonFile, RestaurantDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        restaurantDTO.setAvatar(nameFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantDTO));
     }
 
@@ -59,7 +68,15 @@ public class RestaurantController {
     }
 
     @PutMapping(value = "restaurants/edit/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> updateProfile(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> updateProfile(@RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file, @PathVariable Long restaurantId) {
+        String nameFile = cloudinaryService.uploadFile(file);
+        RestaurantDTO restaurantDTO = null;
+        try {
+            restaurantDTO = new ObjectMapper().readValue(jsonFile, RestaurantDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        restaurantDTO.setAvatar(nameFile);
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.update(restaurantDTO, restaurantId));
     }
 
@@ -155,7 +172,15 @@ public class RestaurantController {
      * Edit foodItem
      * */
     @PutMapping(value = "/restaurants/fooditems/edit/{fooditemId}")
-    public ResponseEntity<FoodItemDTO> editFoodItem(@PathVariable Long fooditemId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
+    public ResponseEntity<FoodItemDTO> editFoodItem(@PathVariable Long fooditemId, @RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file) {
+        String nameFile = cloudinaryService.uploadFile(file);
+        FoodItemDTO foodItemDTO = null;
+        try {
+            foodItemDTO = new ObjectMapper().readValue(jsonFile, FoodItemDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        foodItemDTO.setImage(nameFile);
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.editFoodItem(fooditemId, foodItemDTO));
     }
 
@@ -242,4 +267,10 @@ public class RestaurantController {
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(cloudinaryService.uploadFile(file));
     }
+//
+//    @GetMapping("/statistic/{restaurantId}/{month}")
+//    public ResponseEntity<Page<StatisticDTO>> getMostFoodItem(@PathVariable Long restaurantId, @PathVariable Integer month) {
+//        PageRequest request = PageRequest.of(0, 3);
+//        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMostFoodItem(restaurantId, month, request));
+//    }
 }

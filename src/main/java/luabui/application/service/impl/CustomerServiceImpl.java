@@ -7,6 +7,7 @@ import luabui.application.dto.CustomerDTO;
 import luabui.application.dto.OrderDTO;
 import luabui.application.dto.OrderModificationDTO;
 import luabui.application.exception.CustomerNotFoundException;
+import luabui.application.exception.NotFoundException;
 import luabui.application.exception.OrderNotFoundException;
 import luabui.application.exception.OrderStatusException;
 import luabui.application.model.*;
@@ -31,15 +32,19 @@ public class CustomerServiceImpl implements CustomerService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private CartRepository cartRepository;
+    private DeliveryGuyRepository deliveryGuyRepository;
 //    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository, CartRepository cartRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository,
+                               UserRepository userRepository, RoleRepository roleRepository,
+                               CartRepository cartRepository, DeliveryGuyRepository deliveryGuyRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.cartRepository = cartRepository;
+        this.deliveryGuyRepository = deliveryGuyRepository;
 //        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -128,6 +133,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (!order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("cancelled")) {
             log.debug("Successfully changed order status.");
+            DeliveryGuy deliveryGuy = deliveryGuyRepository.findById(order.getDeliveryGuy().getId()).orElseThrow(() -> new NotFoundException("Not found"));
+            deliveryGuy.setIsBusy(false);
+            deliveryGuyRepository.save(deliveryGuy);
             order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
         } else {
             throw new OrderStatusException("The order you are trying to cancel is already: " + order.getOrderStatus());
