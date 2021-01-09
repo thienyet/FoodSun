@@ -154,6 +154,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Page<RestaurantDTO> getRestaurantByFoodItemName(String name, Pageable pageable) {
+        Page<Restaurant> restaurantPage = restaurantRepository.getRestaurantByFoodItemName(name, pageable);
+        Page<RestaurantDTO> restaurantDTOPage = restaurantPage.map(MapperUtil :: toRestaurantDTO);
+        return restaurantDTOPage;
+    }
+
+    @Override
     public RestaurantDTO changeStatus(Long restaurantId) {
         Restaurant restaurant = getRestaurant(restaurantId);
         User user = userRepository.findByEmail(restaurant.getEmail());

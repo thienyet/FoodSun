@@ -29,6 +29,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Query("select res from Restaurant res where res.category.id = :category and res.isActive = true")
     Page<Restaurant> getRestaurantsByCategory(@Param("category")Long categoryId, Pageable pageable);
 
-
+    @Query("select res from Restaurant res, FoodItem food where res.id = food.restaurant.id and food.name like %:name% group by res.id")
+    Page<Restaurant> getRestaurantByFoodItemName(@Param("name")String name, Pageable pageable);
 
 }

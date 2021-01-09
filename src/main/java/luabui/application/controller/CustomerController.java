@@ -168,6 +168,16 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
     }
 
+    @GetMapping(value = "/customers/restaurants/name/{name}")
+    public ResponseEntity<?> getAllRestaurantsByName(@PathVariable String name,
+                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                     @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        log.debug("Getting all Restaurants by name");
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<RestaurantDTO> restaurantDTOList = restaurantService.getRestaurantByName(name, request);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOList);
+    }
+
     @GetMapping(value = "customers/restaurants/{restaurantId}")
     public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long restaurantId) {
         RestaurantDTO restaurantDTO = restaurantService.findById(restaurantId);
@@ -189,6 +199,24 @@ public class CustomerController {
         FoodItem foodItem = foodItemService.findById(foodItemId);
         return ResponseEntity.status(HttpStatus.OK).body(MapperUtil.toFoodItemDTO(foodItem));
     }
+
+    @GetMapping(value = "customers/restaurants/foodItems/name/{name}")
+    public ResponseEntity<Page<RestaurantDTO>> getRestaurantsByFoodItemName(@PathVariable String name,
+                                                                            @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
+        PageRequest request = PageRequest.of(page - 1, size);
+        Page<RestaurantDTO> restaurantDTOPage = restaurantService.getRestaurantByFoodItemName(name, request);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOPage);
+    }
+
+//    @GetMapping(value = "customers/restaurants/{restaurantId}/foodItems/name/{name}")
+//    public ResponseEntity<Page<RestaurantDTO>> getFoodItemByNameAndRestaurantId(@PathVariable String name,
+//                                                                            @RequestParam(value = "page", defaultValue = "1") Integer page,
+//                                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
+//        PageRequest request = PageRequest.of(page - 1, size);
+//        Page<RestaurantDTO> restaurantDTOPage = restaurantService.getRestaurantByFoodItemName(name, request);
+//        return ResponseEntity.status(HttpStatus.OK).body(restaurantDTOPage);
+//    }
 
     @GetMapping(value = "/customers/profile")
     public ResponseEntity<?> getProfile(@RequestParam String email) {
