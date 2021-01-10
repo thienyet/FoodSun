@@ -205,6 +205,7 @@ public class OrderServiceImpl implements OrderService {
         Random random = new Random();
         DeliveryGuy deliveryGuy = deliveryGuysNotBusy.get(random.nextInt(deliveryGuysNotBusy.size()));
         deliveryGuy.setIsBusy(true);
+        deliveryGuyRepository.save(deliveryGuy);
         return deliveryGuy;
     }
 }

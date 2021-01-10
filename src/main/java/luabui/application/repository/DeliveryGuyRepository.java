@@ -19,7 +19,7 @@ public interface DeliveryGuyRepository extends JpaRepository<DeliveryGuy, Long> 
 
     Page<DeliveryGuy> findAll(Pageable pageable);
 
-    @Query("Select delivery from DeliveryGuy  delivery where delivery.isBusy = false ")
+    @Query("Select delivery from DeliveryGuy  delivery where delivery.isBusy = false and delivery.isActive=true")
     List<DeliveryGuy> findAllNotBusy();
 
     @Query("select delivery from DeliveryGuy delivery where delivery.name like %:name%")
