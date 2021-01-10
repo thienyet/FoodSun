@@ -285,7 +285,7 @@ public class AdminController {
     /*
      * Get all categories
      * */
-    @GetMapping(value = "/admins/categories")
+    @GetMapping(value = "/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategory() {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllExisted());
     }
@@ -293,7 +293,7 @@ public class AdminController {
     /*
      * Get category by categoryId
      * */
-    @GetMapping(value = "/admins/categories/Id/{categoryId}")
+    @GetMapping(value = "/categories/Id/{categoryId}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.findById(categoryId));
     }

@@ -1,6 +1,7 @@
 package luabui.application.controller;
 
 import luabui.application.dto.*;
+import luabui.application.model.Customer;
 import luabui.application.model.FoodItem;
 import luabui.application.model.Restaurant;
 import luabui.application.model.User;
@@ -222,6 +223,13 @@ public class CustomerController {
     public ResponseEntity<?> getProfile(@RequestParam String email) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
     }
+
+//    @GetMapping(value = "/customers/profile")
+//    public ResponseEntity<?> getProfile(Authentication authentication) {
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        String email = userDetails.getUsername();
+//        return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
+//    }
 
     @PutMapping(value = "/customers/edit/{customerId}")
     public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
