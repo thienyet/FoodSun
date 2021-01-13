@@ -129,13 +129,14 @@ public class RestaurantController {
     /*
      * Get all food items by name
      * */
-    @GetMapping(value = "/restaurants/fooditems/name/{name}")
-    public ResponseEntity<Page<FoodItemDTO>> getFoodItemByName(
+    @GetMapping(value = "/restaurants/{restaurantId}/fooditems/name/{name}")
+    public ResponseEntity<Page<FoodItemDTO>> getFoodItemByNameAndResId(
+                                                    @PathVariable Long restaurantId,
                                                     @PathVariable String name,
                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                     @RequestParam(value = "size", defaultValue = "3") Integer size) {
         PageRequest request = PageRequest.of(page - 1, size);
-        Page<FoodItemDTO> list = restaurantService.getFoodItemByName(name, request);
+        Page<FoodItemDTO> list = restaurantService.getFoodItemByNameAndResId(restaurantId, name, request);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 

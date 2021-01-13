@@ -14,4 +14,7 @@ public interface FoodItemRepository extends JpaRepository<FoodItem, Long> {
 
     @Query("select fooditem from FoodItem  fooditem where fooditem.name like %:name% and fooditem.isDeleted = false")
     Page<FoodItem> findByName(@Param("name") String name, Pageable pageable);
+
+    @Query("select fooditem from FoodItem  fooditem where fooditem.restaurant.id = :restaurant and fooditem.name like %:name% and fooditem.isDeleted = false")
+    Page<FoodItem> findByNameAndResId(@Param("restaurant") Long restaurantId, @Param("name") String name, Pageable pageable);
 }

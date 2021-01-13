@@ -193,6 +193,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Page<FoodItemDTO> getFoodItemByNameAndResId(Long restaurantID, String name, Pageable pageable) {
+        Page<FoodItem> foodItemPage = foodItemRepository.findByNameAndResId(restaurantID, name, pageable);
+        Page<FoodItemDTO> foodItemDTOPage = foodItemPage.map(MapperUtil :: toFoodItemDTO);
+        return foodItemDTOPage;
+    }
+
+    @Override
     public FoodItemDTO editFoodItem(Long fooditemId, FoodItemDTO foodItemDTO) {
         FoodItem foodItem = foodItemRepository.findById(fooditemId).orElseThrow(() -> new NotFoundException("Not Found"));
         foodItem.setName(foodItemDTO.getName());
