@@ -24,6 +24,8 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     RestaurantDTO update(RestaurantDTO restaurantDTO, Long restaurantId);
 
+    RestaurantDTO changeAvatar(String nameFile, Long restaurantId);
+
     Page<RestaurantDTO> getRestaurantByDate(Date createDate, Pageable pageable);
 
     Page<RestaurantDTO> findAll(Pageable pageable);
@@ -48,6 +50,8 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
     Page<FoodItemDTO> getFoodItemByNameAndResId(Long restaurantID, String name, Pageable pageable);
 
     FoodItemDTO editFoodItem(Long fooditemId, FoodItemDTO foodItemDTO);
+
+    FoodItemDTO changeImageFoodItem(String nameFile, Long fooditemId);
 
     FoodItemDTO updateStatus(Long foodItemId);
 

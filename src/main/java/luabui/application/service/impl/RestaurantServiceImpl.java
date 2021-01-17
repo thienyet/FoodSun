@@ -104,7 +104,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setName(restaurantDTO.getName());
         restaurant.setPassword(restaurantDTO.getPassword());
         restaurant.setAddress(restaurantDTO.getAddress());
-        restaurant.setAvatar(restaurantDTO.getAvatar());
         Category category = categoryRepository.findById(restaurantDTO.getCategoryId()).orElseThrow(() -> new NotFoundException("Not Found category id"));
         restaurant.setCategory(category);
         restaurant.setMaxCost(restaurantDTO.getMaxCost());
@@ -116,6 +115,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         user.setPassword(restaurant.getPassword());
         userRepository.saveAndFlush(user);
 
+        return MapperUtil.toRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public RestaurantDTO changeAvatar(String nameFile, Long restaurantId) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        restaurant.setAvatar(nameFile);
+        restaurantRepository.save(restaurant);
         return MapperUtil.toRestaurantDTO(restaurant);
     }
 
@@ -204,7 +211,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         FoodItem foodItem = foodItemRepository.findById(fooditemId).orElseThrow(() -> new NotFoundException("Not Found"));
         foodItem.setName(foodItemDTO.getName());
         foodItem.setPrice(foodItemDTO.getPrice());
-        foodItem.setImage(foodItemDTO.getImage());
+        foodItemRepository.save(foodItem);
+        return MapperUtil.toFoodItemDTO(foodItem);
+    }
+
+    @Override
+    public FoodItemDTO changeImageFoodItem(String nameFile, Long fooditemId) {
+        FoodItem foodItem = foodItemRepository.findById(fooditemId).orElseThrow(() -> new NotFoundException("Not Found"));
+        foodItem.setImage(nameFile);
         foodItemRepository.save(foodItem);
         return MapperUtil.toFoodItemDTO(foodItem);
     }

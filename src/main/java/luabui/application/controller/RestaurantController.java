@@ -68,16 +68,14 @@ public class RestaurantController {
     }
 
     @PutMapping(value = "restaurants/edit/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> updateProfile(@RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file, @PathVariable Long restaurantId) {
-        String nameFile = cloudinaryService.uploadFile(file);
-        RestaurantDTO restaurantDTO = null;
-        try {
-            restaurantDTO = new ObjectMapper().readValue(jsonFile, RestaurantDTO.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        restaurantDTO.setAvatar(nameFile);
+    public ResponseEntity<RestaurantDTO> updateProfile(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantId) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.update(restaurantDTO, restaurantId));
+    }
+
+    @PutMapping(value = "restaurants/edit/avatar/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long restaurantId) {
+        String nameFile = cloudinaryService.uploadFile(file);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.changeAvatar(nameFile, restaurantId));
     }
 
     /**
@@ -173,16 +171,14 @@ public class RestaurantController {
      * Edit foodItem
      * */
     @PutMapping(value = "/restaurants/fooditems/edit/{fooditemId}")
-    public ResponseEntity<FoodItemDTO> editFoodItem(@PathVariable Long fooditemId, @RequestParam("dto") String jsonFile, @RequestParam("file") MultipartFile file) {
-        String nameFile = cloudinaryService.uploadFile(file);
-        FoodItemDTO foodItemDTO = null;
-        try {
-            foodItemDTO = new ObjectMapper().readValue(jsonFile, FoodItemDTO.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        foodItemDTO.setImage(nameFile);
+    public ResponseEntity<FoodItemDTO> editFoodItem(@PathVariable Long fooditemId, @Valid @RequestBody FoodItemDTO foodItemDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.editFoodItem(fooditemId, foodItemDTO));
+    }
+
+    @PutMapping(value = "/restaurants/fooditems/edit/image/{fooditemId}")
+    public ResponseEntity<FoodItemDTO> changeImageFoodItem(@PathVariable Long fooditemId, @RequestParam("file") MultipartFile file) {
+        String nameFile = cloudinaryService.uploadFile(file);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.changeImageFoodItem(nameFile, fooditemId));
     }
 
     /*
