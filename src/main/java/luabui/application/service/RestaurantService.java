@@ -61,4 +61,6 @@ public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
 
     Page<OrderDTO> getOrdersByRestaurantIdAndDate(Long restaurantId, Date date, Pageable pageable);
 
+    List<CategoryDTO> getAllCategory();
+
 }

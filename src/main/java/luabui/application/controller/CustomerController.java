@@ -150,6 +150,11 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantPage);
     }
 
+    @GetMapping(value = "/customers/restaurants/categories")
+    public  ResponseEntity<List<CategoryDTO>> getAllCategory() {
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getAllCategory());
+    }
+
     @GetMapping(value = "/customers/restaurants/category/{categoryId}")
     public ResponseEntity<Page<RestaurantDTO>> getRestaurantByCategory(@PathVariable Long categoryId,
                                                                        @RequestParam(value = "page", defaultValue = "1") Integer page,

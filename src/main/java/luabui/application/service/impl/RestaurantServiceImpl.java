@@ -252,6 +252,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         return orderDTOPage;
     }
 
+    @Override
+    public List<CategoryDTO> getAllCategory() {
+        List<Category> categoryList = categoryRepository.findAllExisted();
+        return categoryList.stream().map(MapperUtil :: toCategoryDTO).collect(Collectors.toList());
+    }
+
 
 //    @Override
 //    public Page<OrderDTO> getOrderOfResInOneDay(Long restaurantId, Date date, Pageable pageable) {
